@@ -1,18 +1,21 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { Document, Schema as MongooseSchema } from 'mongoose';
 
-export type BillDocument = HydratedDocument<Bill>;
+export type BillDocument = Bill & Document;
 
 @Schema({ timestamps: true })
 export class Bill {
-    @Prop({ required: true })
-    householdId: string;
+    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Household', required: true })
+    householdId: MongooseSchema.Types.ObjectId;
+
+    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'BillType', required: true })
+    billTypeId: MongooseSchema.Types.ObjectId;
+
+    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Member', required: true })
+    createdBy: MongooseSchema.Types.ObjectId;
 
     @Prop({ required: true })
-    billType: string;
-
-    @Prop({ required: true, min: 0 })
-    totalCents: number;
+    totalAmount: number;
 
     @Prop({ required: true })
     periodStart: Date;
@@ -20,8 +23,11 @@ export class Bill {
     @Prop({ required: true })
     periodEnd: Date;
 
-    @Prop({ default: 'open' })
-    status: 'open' | 'paid';
+    @Prop({ default: false })
+    isFullyPaid: boolean;
+
+    @Prop({ default: '' })
+    notes: string;
 }
 
 export const BillSchema = SchemaFactory.createForClass(Bill);

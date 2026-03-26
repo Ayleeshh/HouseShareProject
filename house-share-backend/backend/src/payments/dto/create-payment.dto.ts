@@ -1,15 +1,19 @@
-import { IsInt, IsNotEmpty, IsString, Min } from 'class-validator';
+import {IsDateString, IsInt, IsNotEmpty, IsString, Min} from 'class-validator';
 
 export class CreatePaymentDto {
+
     @IsString()
     @IsNotEmpty()
     billId: string;
 
     @IsString()
     @IsNotEmpty()
-    payerName: string;
+    memberId: string;
 
     @IsInt()
     @Min(0)
-    amountCents: number;
+    totalCents: number;
+
+    @IsDateString()
+    date: string;
 }

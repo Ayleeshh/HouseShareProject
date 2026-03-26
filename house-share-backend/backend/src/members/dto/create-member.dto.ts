@@ -1,4 +1,5 @@
 import {
+    IsBoolean,
     IsDateString,
     IsInt,
     IsNotEmpty,
@@ -6,22 +7,18 @@ import {
     Min,
 } from 'class-validator';
 
-export class CreateBillDto {
+export class CreateMemberDto {
     @IsString()
     @IsNotEmpty()
     householdId: string;
 
     @IsString()
     @IsNotEmpty()
-    billTypeId: string;
+    name: string;
 
-    @IsInt()
-    @Min(0)
-    totalCents: number;
+    @IsBoolean()
+    @IsNotEmpty()
+    isAdmin: boolean;
 
-    @IsDateString()
-    periodStart: string;
 
-    @IsDateString()
-    periodEnd: string;
 }

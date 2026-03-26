@@ -6,22 +6,17 @@ import {
     Min,
 } from 'class-validator';
 
-export class CreateBillDto {
+export class CreateHouseholdDto {
     @IsString()
     @IsNotEmpty()
     householdId: string;
 
     @IsString()
     @IsNotEmpty()
-    billTypeId: string;
+    householdName: string;
 
-    @IsInt()
-    @Min(0)
-    totalCents: number;
+    // @IsString()
+    // @IsNotEmpty()
+    // members: string;
 
-    @IsDateString()
-    periodStart: string;
-
-    @IsDateString()
-    periodEnd: string;
 }
