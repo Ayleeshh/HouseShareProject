@@ -7,26 +7,20 @@ export enum AllocationStatus { UNPAID = 'unpaid', PART_PAID = 'part-paid', PAID 
 
 @Schema({ timestamps: true })
 export class Allocation {
-    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Bill', required: true })
-    billId: MongooseSchema.Types.ObjectId;
+  @Prop({required: true})
+  billId: string;
 
-    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Member', required: true })
-    memberId: MongooseSchema.Types.ObjectId;
+  @Prop({required: true})
+  memberId: string;
 
-    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Household', required: true })
-    householdId: MongooseSchema.Types.ObjectId;
+  @Prop({required: true})
+  amountOwed: number;
 
-    @Prop({ required: true })
-    amountOwed: number;
+  @Prop({ default: 0 })
+  amountPaid: number;
 
-    @Prop({ default: 0 })
-    amountPaid: number;
-
-    @Prop({ default: 0 })
-    amountOutstanding: number;
-
-    @Prop({ enum: AllocationStatus, default: AllocationStatus.UNPAID })
-    status: AllocationStatus;
+  @Prop({ default: 'unpaid'})
+  status: string;
 }
 
 export const AllocationSchema = SchemaFactory.createForClass(Allocation);

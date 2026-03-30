@@ -1,27 +1,37 @@
 import {
-    IsDateString,
-    IsInt,
-    IsNotEmpty,
-    IsString,
-    Min,
+  IsBoolean,
+  IsDateString,
+  IsInt,
+  IsNotEmpty,
+  IsString,
+  Min,
 } from 'class-validator';
+import {Prop} from "@nestjs/mongoose";
 
 export class CreateBillDto {
-    @IsString()
-    @IsNotEmpty()
-    householdId: string;
+  @IsString()
+  @IsNotEmpty()
+  householdId: string;
 
-    @IsString()
-    @IsNotEmpty()
-    billTypeId: string;
+  @IsString()
+  @IsNotEmpty()
+  billTypeId: string;
 
-    @IsInt()
-    @Min(0)
-    totalCents: number;
+  @IsString()
+  @IsNotEmpty()
+  description: string;
 
-    @IsDateString()
-    periodStart: string;
+  @IsInt()
+  @Min(0)
+  totalAmount: number;
 
-    @IsDateString()
-    periodEnd: string;
+  @IsDateString()
+  startDate: string;
+
+  @IsDateString()
+  endDate: string;
+
+  @IsBoolean()
+  isClosed:boolean;
+
 }

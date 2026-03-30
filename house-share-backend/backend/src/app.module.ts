@@ -5,38 +5,26 @@ import { BillsModule } from './bills/bills.module';
 import { PaymentsModule } from './payments/payments.module';
 import { HouseholdsModule } from './households/households.module';
 import { MembersModule } from './members/members.module';
-import { BillTypesController } from './bill-types/bill-types.controller';
-import { AllocationModule } from './allocation/allocation.module';
 import { BillTypesModule } from './bill-types/bill-types.module';
-import { BillTypesService } from './bill-types/bill-types.service';
-import { BillTypesController } from './bill-types/bill-types.controller';
+import { AllocationsModule } from './allocation/allocation.module';
 
 @Module({
-    imports: [
-        ConfigModule.forRoot({
-            isGlobal: true,
-        }),
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        uri: config.get<string>('MONGO_URI'),
+      }),
+    }),
+    BillsModule,
+    PaymentsModule,
+    HouseholdsModule,
+    MembersModule,
+    BillTypesModule,
+    AllocationsModule,
+  ],
 
-        MongooseModule.forRootAsync({
-            inject: [ConfigService],
-            useFactory: (config: ConfigService) => ({
-                uri: config.get<string>('MONGO_URI'),
-            }),
-        }),
-
-        BillsModule,
-
-        PaymentsModule,
-
-        HouseholdsModule,
-
-        MembersModule,
-
-        BillTypesModule,
-
-        AllocationModule,
-    ],
-    controllers: [BillTypesController],
-    providers: [BillTypesService],
 })
 export class AppModule {}

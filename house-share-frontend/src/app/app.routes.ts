@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
-import { Bills } from './bills/bills';
+import {BillsComponent} from "./bills/bills.component";
 
 export const routes: Routes = [
-  { path: '', component: Bills },
-  { path: 'bills', component: Bills }
+  { path: '', component: BillsComponent },
+  { path: 'bills', component: BillsComponent }
 ];

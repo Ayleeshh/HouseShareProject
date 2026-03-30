@@ -1,22 +1,23 @@
 import {
-    IsDateString,
-    IsInt,
-    IsNotEmpty,
-    IsString,
-    Min,
+  IsDateString,
+  IsInt,
+  IsNotEmpty,
+  IsString,
+  Min,
 } from 'class-validator';
+import {Prop} from "@nestjs/mongoose";
 
 export class CreateHouseholdDto {
-    @IsString()
-    @IsNotEmpty()
-    householdId: string;
+  @IsString()
+  @IsNotEmpty()
+  householdId: string;
 
-    @IsString()
-    @IsNotEmpty()
-    householdName: string;
+  @IsString()
+  @IsNotEmpty()
+  name: string;
 
-    // @IsString()
-    // @IsNotEmpty()
-    // members: string;
+  @IsString()
+  @IsNotEmpty()
+  members: string[];
 
 }

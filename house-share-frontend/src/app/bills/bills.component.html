@@ -1,0 +1,51 @@
+<h3>Create a Household Bill</h3>
+
+<form (ngSubmit)="addBill()">
+
+  <label>Household</label>
+  <select [(ngModel)]="newBill.householdId" name="householdId" required (ngModelChange)="onHouseholdChange()">
+    <option value="" disabled>Select a household</option>
+    <option *ngFor="let h of households" [value]="h._id">{{ h.name }}</option>
+  </select>
+  <br/>
+
+  <label>Description</label>
+  <input type="text" [(ngModel)]="newBill.description" name="description" required />
+  <br/>
+
+  <label>Total Amount (€)</label>
+  <input type="number" [(ngModel)]="newBill.totalAmount" name="totalAmount" min="0" required />
+  <br/>
+
+  <label>Bill Type</label>
+  <select [(ngModel)]="newBill.billTypeId" name="billTypeId" required>
+    <option value="" disabled>Select a type</option>
+    <option *ngFor="let type of billTypes" [value]="type._id">{{ type.name }}</option>
+  </select>
+  <br/>
+
+  <label>Start Date</label>
+  <input type="date" [(ngModel)]="newBill.startDate" name="startDate" required />
+  <br/>
+
+  <label>End Date</label>
+  <input type="date" [(ngModel)]="newBill.endDate" name="endDate" required />
+  <br/>
+
+  <label>
+    <input type="checkbox" [(ngModel)]="newBill.isClosed" name="isClosed" />
+    Closed
+  </label>
+  <br/>
+
+  <button type="submit">Add Bill</button>
+
+</form>
+
+<h3>Household Bills</h3>
+<ul>
+  <li *ngFor="let bill of bills">
+    <strong>{{ bill.description }}</strong> - €{{ bill.totalAmount }} - {{ bill.billTypeId }}
+  </li>
+</ul>
+<hr />

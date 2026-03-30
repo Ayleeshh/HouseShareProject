@@ -1,0 +1,20 @@
+<h3>Create a Bill Type</h3>
+
+<form (ngSubmit)="createBillType()">
+
+  <input type="text" [(ngModel)]="newBillType.name" name="name" required />
+<br/>
+<label>Household </label>
+<select [(ngModel)]="newBillType.householdId" name="householdId" required>
+  <option value="" disabled>Select a household</option>
+  <option *ngFor="let h of households" [value]="h._id">{{ h.name }}</option>
+</select>
+<br/>
+  <button type="submit">Add Bill Type</button>
+
+</form>
+<h3>Bill Types</h3>
+<ul>
+  <li *ngFor="let b of billTypes">{{ b.name }}</li>
+</ul>
+<hr />

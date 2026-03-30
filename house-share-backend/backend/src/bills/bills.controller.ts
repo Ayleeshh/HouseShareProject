@@ -1,36 +1,31 @@
 import {
-    Body,
-    Controller,
-    Get,
-    Param,
-    Patch,
-    Post,
-    Query,
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
 } from '@nestjs/common';
 import { BillsService } from './bills.service';
 import { CreateBillDto } from './dto/create-bill.dto';
 
 @Controller('bills')
 export class BillsController {
-    constructor(private readonly billsService: BillsService) {}
+  constructor(private billsService: BillsService) {}
 
-    @Post()
-    create(@Body() dto: CreateBillDto) {
-        return this.billsService.create(dto);
-    }
+  @Post()
+  create(@Body() dto: CreateBillDto) {
+    return this.billsService.create(dto);
+  }
 
-    @Get()
-    findAll(@Query('householdId') householdId: string) {
-        return this.billsService.findAllByHousehold(householdId);
-    }
+  @Get('household/:householdId')
+  findByHousehold(@Param('householdId') id: string) {
+    return this.billsService.findByHousehold(id);
+  }
 
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.billsService.findOne(id);
-    }
-
-    @Patch(':id/paid')
-    markPaid(@Param('id') id: string) {
-        return this.billsService.markPaid(id);
-    }
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.billsService.findOne(id);
+  }
 }

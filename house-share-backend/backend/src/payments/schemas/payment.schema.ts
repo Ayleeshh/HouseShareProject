@@ -5,23 +5,17 @@ export type PaymentDocument = Payment & Document;
 
 @Schema({ timestamps: true })
 export class Payment {
-    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Allocation', required: true })
-    allocationId: MongooseSchema.Types.ObjectId;
+    @Prop()
+    allocationId: string;
 
-    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Member', required: true })
-    memberId: MongooseSchema.Types.ObjectId;
+    @Prop()
+    memberId: string;
 
-    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Bill', required: true })
-    billId: MongooseSchema.Types.ObjectId;
-
-    @Prop({ required: true })
+    @Prop()
     amount: number;
 
     @Prop({ default: Date.now })
     paidAt: Date;
-
-    @Prop({ default: '' })
-    note: string;
 }
 
 export const PaymentSchema = SchemaFactory.createForClass(Payment);

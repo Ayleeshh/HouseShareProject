@@ -1,0 +1,41 @@
+<h3>Create a Member</h3>
+
+<form (ngSubmit)="createMember()">
+
+  <label>Name </label>
+  <input type="text" [(ngModel)]="newMember.name" name="name" required />
+<br/>
+  <label>Email </label>
+  <input type="email" [(ngModel)]="newMember.email" name="email" />
+  <br/>
+  <label>Household </label>
+  <select [(ngModel)]="newMember.householdId" name="householdId" required>
+    <option value="" disabled>Select a household</option>
+    <option *ngFor="let h of households" [value]="h._id">{{ h.name }}</option>
+  </select>
+  <br/>
+  <label>
+    <input type="checkbox" [(ngModel)]="newMember.isAdmin" name="isAdmin" />
+    Admin
+  </label>
+  <br/>
+  <label>
+    <input type="checkbox" [(ngModel)]="newMember.isActive" name="isActive" />
+    Active
+  </label>
+  <br/>
+  <button type="submit">Add Member</button>
+
+</form>
+
+<h3>Members</h3>
+
+<ul>
+  <li *ngFor="let member of members">
+    <strong>Name:</strong> {{ member.name }}<br/>
+    <strong>Email:</strong> {{ member.email }}<br/>
+    <strong>Admin?:</strong> {{ member.isAdmin }}<br/>
+    <strong>Household: </strong> <span *ngFor="let h of households">{{ h.name }}</span>
+  </li>
+</ul>
+<hr />

@@ -1,15 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Schema as MongooseSchema } from 'mongoose';
+import { Document } from 'mongoose';
 
 export type BillTypeDocument = BillType & Document;
 
-@Schema({ timestamps: true })
+@Schema()
 export class BillType {
     @Prop({ required: true })
-    name: string;  // e.g. 'Electricity', 'Internet', 'Bins'
+    name: string;
 
-    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Household', required: true })
-    householdId: MongooseSchema.Types.ObjectId;
+    @Prop()
+    householdId: string;
 }
 
 export const BillTypeSchema = SchemaFactory.createForClass(BillType);

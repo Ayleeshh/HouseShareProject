@@ -1,9 +1,10 @@
 export interface Bill {
   _id?: string;
   householdId: string;
-  billType: string;
-  totalCents: number;
-  periodStart: string;
-  periodEnd: string;
-  status?: string;
+  billTypeId: string;
+  description: string;
+  totalAmount: number;
+  startDate?: String;
+  endDate?: String;
+  isClosed?: boolean;
 }

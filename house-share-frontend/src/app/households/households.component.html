@@ -1,0 +1,9 @@
+<h3>Create a Household</h3>
+<input type="text" [(ngModel)]="newHouseholdName" placeholder="New Household Name" />
+<button (click)="createHousehold()">Create</button>
+<h3>Households</h3>
+
+<ul>
+  <li *ngFor="let h of households">{{ h.name }}</li>
+</ul>
+<hr />

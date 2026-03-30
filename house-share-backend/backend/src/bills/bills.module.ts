@@ -3,15 +3,18 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { BillsController } from './bills.controller';
 import { BillsService } from './bills.service';
 import { Bill, BillSchema } from './schemas/bill.schema';
-import { AllocationModule } from '../allocation/allocation.module';
+import { AllocationsModule } from '../allocation/allocation.module';
+import {MembersModule} from "../members/members.module";
 
 @Module({
-    imports: [
-        MongooseModule.forFeature([{ name: Bill.name, schema: BillSchema }]),
-        AllocationModule,
-    ],
-    controllers: [BillsController],
-    providers: [BillsService],
-    exports: [BillsService],
+  imports: [
+    MongooseModule.forFeature([
+      { name: Bill.name, schema: BillSchema },
+    ]),
+    AllocationsModule,
+    MembersModule,
+  ],
+  controllers: [BillsController],
+  providers: [BillsService],
 })
 export class BillsModule {}
