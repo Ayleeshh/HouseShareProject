@@ -1,7 +1,16 @@
-<h1>House Share App</h1>
-
-<app-bill-types></app-bill-types>
-<app-bills></app-bills>
-<app-members></app-members>
-<app-households></app-households>
-
+<div class="app-wrapper">
+  <nav class="navbar">
+    <span class="brand">House Share App</span>
+    <div class="nav-links">
+      <a routerLink="/bills" routerLinkActive="active">Household Bills</a>
+      <a routerLink="/payments" routerLinkActive="active">Payments</a>
+      <a routerLink="/members" routerLinkActive="active">Members</a>
+      <a routerLink="/bill-types" routerLinkActive="active">Bill Types</a>
+      <a routerLink="/households" routerLinkActive="active">Households</a>
+      <a routerLink="/admin" routerLinkActive="active">Admin</a>
+    </div>
+  </nav>
+  <div class="page-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

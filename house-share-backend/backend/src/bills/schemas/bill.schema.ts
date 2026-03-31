@@ -1,11 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
-import {IsDateString} from "class-validator";
 
 export type BillDocument = Bill & Document;
 
 @Schema({ timestamps: true })
 export class Bill {
+
     @Prop({required: true })
     householdId: string;
 

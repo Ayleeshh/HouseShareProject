@@ -1,12 +1,8 @@
 import {
   IsBoolean,
-  IsDateString,
-  IsInt,
   IsNotEmpty,
   IsString,
-  Min,
 } from 'class-validator';
-import {Prop} from "@nestjs/mongoose";
 
 export class CreateMemberDto {
   @IsString()

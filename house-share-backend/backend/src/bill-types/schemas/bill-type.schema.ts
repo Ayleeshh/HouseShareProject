@@ -5,10 +5,11 @@ export type BillTypeDocument = BillType & Document;
 
 @Schema()
 export class BillType {
+
     @Prop({ required: true })
     name: string;
 
-    @Prop()
+    @Prop({ required: true })
     householdId: string;
 }
 

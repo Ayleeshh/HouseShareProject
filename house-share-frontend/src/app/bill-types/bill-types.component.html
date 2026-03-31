@@ -1,20 +1,52 @@
-<h3>Create a Bill Type</h3>
+<div class="tabs">
+  <button (click)="setTab('view')"   [class.active]="activeTab === 'view'">View</button>
+  <button (click)="setTab('create')" [class.active]="activeTab === 'create'">Create</button>
+  <button (click)="setTab('edit')"   [class.active]="activeTab === 'edit'">Edit</button>
+</div>
 
-<form (ngSubmit)="createBillType()">
+<!-- VIEW -->
+<div *ngIf="activeTab === 'view'">
+  <h3>All Bill Types</h3>
+  <ul>
+    <li *ngFor="let b of billTypes">
+      <strong>{{ b.name }}</strong> — {{ getHouseholdName(b.householdId) }}
+      <button (click)="selectBillType(b)">Edit</button>
+      <button class="delete-btn" (click)="deleteBillType(b._id!)">Delete</button>
+    </li>
+  </ul>
+</div>
 
-  <input type="text" [(ngModel)]="newBillType.name" name="name" required />
-<br/>
-<label>Household </label>
-<select [(ngModel)]="newBillType.householdId" name="householdId" required>
-  <option value="" disabled>Select a household</option>
-  <option *ngFor="let h of households" [value]="h._id">{{ h.name }}</option>
-</select>
-<br/>
-  <button type="submit">Add Bill Type</button>
+<!-- CREATE -->
+<div *ngIf="activeTab === 'create'">
+  <h3>Create a Bill Type</h3>
+  <form (ngSubmit)="createBillType()">
+    <label>Name</label>
+    <input type="text" [(ngModel)]="newBillType.name" name="name" required />
+    <br/>
+    <label>Household</label>
+    <select [(ngModel)]="newBillType.householdId" name="householdId" required>
+      <option value="" disabled>Select a household</option>
+      <option *ngFor="let h of households" [value]="h._id">{{ h.name }}</option>
+    </select>
+    <br/>
+    <button type="submit">Create Bill Type</button>
+  </form>
+</div>
 
-</form>
-<h3>Bill Types</h3>
-<ul>
-  <li *ngFor="let b of billTypes">{{ b.name }}</li>
-</ul>
-<hr />
+<!-- EDIT -->
+<div *ngIf="activeTab === 'edit'">
+  <h3>Edit Bill Type</h3>
+  <p *ngIf="!selectedBillType">Select a bill type from the View tab to edit it.</p>
+  <form *ngIf="selectedBillType" (ngSubmit)="updateBillType()">
+    <label>Name</label>
+    <input type="text" [(ngModel)]="selectedBillType.name" name="name" required />
+    <br/>
+    <label>Household</label>
+    <select [(ngModel)]="selectedBillType.householdId" name="householdId" required>
+      <option *ngFor="let h of households" [value]="h._id">{{ h.name }}</option>
+    </select>
+    <br/>
+    <button type="submit">Save Changes</button>
+    <button type="button" (click)="setTab('view')">Cancel</button>
+  </form>
+</div>

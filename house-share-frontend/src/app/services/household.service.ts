@@ -18,4 +18,12 @@ export class HouseholdService {
   getHouseholds(): Observable<Household[]> {
     return this.http.get<Household[]>(this.apiUrl);
   }
+
+  updateHousehold(id: string, data: Partial<Household>): Observable<Household> {
+    return this.http.put<Household>(`${this.apiUrl}/${id}`, data);
+  }
+
+  deleteHousehold(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }

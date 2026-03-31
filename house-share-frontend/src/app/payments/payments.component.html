@@ -1,0 +1,62 @@
+<h3>Record a Payment</h3>
+
+<label>Household</label><br/>
+<select [(ngModel)]="selectedHouseholdId" name="householdId"
+        (ngModelChange)="onHouseholdChange()">
+  <option value="" disabled>Select a household</option>
+  <option *ngFor="let h of households" [value]="h._id">{{ h.name }}</option>
+</select>
+<br/><br/>
+
+<ng-container *ngIf="selectedHouseholdId">
+  <label>Bill</label><br/>
+  <select [(ngModel)]="selectedBillId" name="billId"
+          (ngModelChange)="onBillChange()">
+    <option value="" disabled>Select a bill</option>
+    <option *ngFor="let b of bills" [value]="b._id">
+      {{ b.description }} — €{{ b.totalAmount }}
+    </option>
+  </select>
+  <br/><br/>
+</ng-container>
+
+<ng-container *ngIf="selectedBillId">
+
+  <h4>Bill Allocations</h4>
+  <ul>
+    <li *ngFor="let a of allocations">
+      <strong>{{ getMemberName(a.memberId) }}</strong> —
+      Owes: €{{ a.amountOwed }} |
+      Paid: €{{ a.amountPaid }} |
+      Outstanding: €{{ getOutstanding(a) }} |
+      Status: <strong>{{ a.status }}</strong>
+    </li>
+  </ul>
+
+  <h4>Make a Payment</h4>
+
+  <label>Select Member Allocation</label><br/>
+  <select [(ngModel)]="newPayment.allocationId" name="allocationId"
+          (ngModelChange)="onAllocationChange()">
+    <option value="" disabled>Select a member</option>
+    <option *ngFor="let a of allocations"
+            [value]="a._id"
+            [disabled]="a.status === 'paid'">
+      {{ getMemberName(a.memberId) }} — outstanding: €{{ getOutstanding(a) }} — {{ a.status }}
+    </option>
+  </select>
+  <br/><br/>
+
+  <label>Amount (€)</label><br/>
+  <input type="number" [(ngModel)]="newPayment.amount"
+         name="amount" min="0" />
+  <br/><br/>
+
+  <label>Date Paid</label><br/>
+  <input type="date" [(ngModel)]="newPayment.paidAt" name="paidAt" />
+  <br/><br/>
+
+  <button (click)="addPayment()">Record Payment</button>
+</ng-container>
+
+<hr/>

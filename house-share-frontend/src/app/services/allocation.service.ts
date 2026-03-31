@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Allocation } from '../models/allocation';
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -14,5 +13,9 @@ export class AllocationService {
 
   getAllocationsByBill(billId: string): Observable<Allocation[]> {
     return this.http.get<Allocation[]>(`${this.apiUrl}/bill/${billId}`);
+  }
+
+  getAllocationById(id: string): Observable<Allocation> {
+    return this.http.get<Allocation>(`${this.apiUrl}/${id}`);
   }
 }

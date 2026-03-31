@@ -15,4 +15,9 @@ export class PaymentsController {
   findByBill(@Param('billId') billId: string) {
     return this.paymentsService.findByBill(billId);
   }
+
+  @Get('allocation/:allocationId')
+  findByAllocation(@Param('allocationId') allocationId: string) {
+    return this.paymentsService.findByAllocation(allocationId);
+  }
 }

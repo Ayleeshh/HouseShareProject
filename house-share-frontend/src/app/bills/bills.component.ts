@@ -1,24 +1,31 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgForOf, NgIf } from '@angular/common';
 import { BillService } from '../services/bill.service';
 import { BillTypeService } from '../services/bill-type.service';
 import { HouseholdService } from '../services/household.service';
+import { AllocationService } from '../services/allocation.service';
 import { Bill } from '../models/bill';
 import { BillType } from '../models/bill-type';
 import { Household } from '../models/household';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { Allocation } from '../models/allocation';
 
 @Component({
   selector: 'app-bills',
-  templateUrl: './bills.component.html',
-  imports: [CommonModule, FormsModule],
   standalone: true,
+  imports: [FormsModule, NgForOf, NgIf],
+  templateUrl: './bills.component.html',
   styleUrls: ['./bills.component.css']
 })
 export class BillsComponent implements OnInit {
+  activeTab: 'view' | 'create' | 'detail' = 'view';
+
   bills: Bill[] = [];
   billTypes: BillType[] = [];
   households: Household[] = [];
+  allocations: Allocation[] = [];
+  selectedBill: Bill | null = null;
+  filterHouseholdId = '';
 
   newBill = {
     description: '',
@@ -27,13 +34,13 @@ export class BillsComponent implements OnInit {
     billTypeId: '',
     startDate: '',
     endDate: '',
-    isClosed: false
   };
 
   constructor(
     private billService: BillService,
     private billTypeService: BillTypeService,
-    private householdService: HouseholdService
+    private householdService: HouseholdService,
+    private allocationService: AllocationService,
   ) {}
 
   ngOnInit() {
@@ -41,71 +48,66 @@ export class BillsComponent implements OnInit {
     this.loadBillTypes();
   }
 
-  loadBills() {
-    if (!this.newBill.householdId) return;
-    this.billService.getBillsByHousehold(this.newBill.householdId).subscribe({
-      next: (data) => this.bills = data,
-      error: (err) => console.error('Error loading bills', err)
-    });
-  }
-
-  loadBillTypes() {
-    this.billTypeService.getBillTypes().subscribe({
-      next: (data) => this.billTypes = data,
-      error: (err) => console.error('Error loading bill types', err)
-    });
+  setTab(tab: 'view' | 'create' | 'detail') {
+    this.activeTab = tab;
   }
 
   loadHouseholds() {
-    this.householdService.getHouseholds().subscribe({
-      next: (data) => this.households = data,
-      error: (err) => console.error('Error loading households', err)
-    });
+    this.householdService.getHouseholds().subscribe(res => this.households = res);
   }
 
-  onHouseholdChange() {
-    this.bills = [];
-    this.loadBills();
+  loadBillTypes() {
+    this.billTypeService.getBillTypes().subscribe(res => this.billTypes = res);
   }
 
-  addBill() {
-    if (!this.newBill.description || !this.newBill.billTypeId || !this.newBill.householdId || !this.newBill.startDate || !this.newBill.endDate) {
-      alert('Please fill all required fields!');
+  loadBills() {
+    if (!this.filterHouseholdId) return;
+    this.billService.getBillsByHousehold(this.filterHouseholdId).subscribe(res => this.bills = res);
+  }
+
+  getBillTypeName(id: string): string {
+    return this.billTypes.find(t => t._id === id)?.name ?? 'Unknown';
+  }
+
+  getHouseholdName(id: string): string {
+    return this.households.find(h => h._id === id)?.name ?? 'Unknown';
+  }
+
+  createBill() {
+    if (!this.newBill.description || !this.newBill.householdId || !this.newBill.billTypeId || !this.newBill.startDate || !this.newBill.endDate) {
+      alert('Please fill all fields');
       return;
     }
-
     const payload: Bill = {
-      householdId: this.newBill.householdId,
-      billTypeId:  this.newBill.billTypeId,
-      description: this.newBill.description,
-      totalAmount: Math.round(this.newBill.totalAmount),
-      startDate:   new Date(this.newBill.startDate).toISOString(),
-      endDate:     new Date(this.newBill.endDate).toISOString(),
-      isClosed:    this.newBill.isClosed
+      ...this.newBill,
+      totalAmount: parseFloat(this.newBill.totalAmount.toFixed(2)),
+      startDate: new Date(this.newBill.startDate).toISOString(),
+      endDate: new Date(this.newBill.endDate).toISOString(),
     };
-
     this.billService.createBill(payload).subscribe({
       next: () => {
-        this.resetForm();
+        this.newBill = { description: '', totalAmount: 0, householdId: '', billTypeId: '', startDate: '', endDate: '' };
         this.loadBills();
+        this.setTab('view');
       },
-      error: (err) => {
-        console.error('Server error:', err.error.message);
-        alert('Error: ' + err.error.message);
-      }
+      error: (err) => alert('Error: ' + err.error.message)
     });
   }
 
-  resetForm() {
-    const currentHouseholdId = this.newBill.householdId;  // preserve selected household
-    this.newBill = {
-      description: '',
-      totalAmount: 0,
-      householdId: currentHouseholdId,
-      billTypeId: '',
-      startDate: '',
-      endDate: '',
-      isClosed: false
-    };
+  viewDetail(bill: Bill) {
+    this.selectedBill = bill;
+    if (bill._id) {
+      this.allocationService.getAllocationsByBill(bill._id).subscribe(res => {
+        this.allocations = res;
+      });
+    }
+    this.setTab('detail');
+  }
+
+  deleteBill(id: string) {
+    if (!confirm('Are you sure you want to delete this bill?')) return;
+    this.billService.deleteBill(id).subscribe(() => {
+      this.loadBills();
+    });
   }
 }

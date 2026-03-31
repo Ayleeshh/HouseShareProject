@@ -1,51 +1,82 @@
-<h3>Create a Household Bill</h3>
+<div class="tabs">
+  <button (click)="setTab('view')"   [class.active]="activeTab === 'view'">View</button>
+  <button (click)="setTab('create')" [class.active]="activeTab === 'create'">Create</button>
+  <button (click)="setTab('detail')" [class.active]="activeTab === 'detail'">Detail</button>
+</div>
 
-<form (ngSubmit)="addBill()">
-
-  <label>Household</label>
-  <select [(ngModel)]="newBill.householdId" name="householdId" required (ngModelChange)="onHouseholdChange()">
+<!-- VIEW -->
+<div *ngIf="activeTab === 'view'">
+  <h3>Household Bills</h3>
+  <label>Filter by Household</label>
+  <select [(ngModel)]="filterHouseholdId" name="filterHousehold" (ngModelChange)="loadBills()">
     <option value="" disabled>Select a household</option>
     <option *ngFor="let h of households" [value]="h._id">{{ h.name }}</option>
   </select>
-  <br/>
+  <br/><br/>
+  <ul>
+    <li *ngFor="let b of bills">
+      <strong>{{ b.description }}</strong> —
+      €{{ b.totalAmount }} —
+      {{ getBillTypeName(b.billTypeId) }} —
+      {{ b.isClosed ? 'Closed' : 'Open' }}
+      <button (click)="viewDetail(b)">View Detail</button>
+      <button class="delete-btn" (click)="deleteBill(b._id!)">Delete</button>
+    </li>
+  </ul>
+</div>
 
-  <label>Description</label>
-  <input type="text" [(ngModel)]="newBill.description" name="description" required />
-  <br/>
+<!-- CREATE -->
+<div *ngIf="activeTab === 'create'">
+  <h3>Create a Bill</h3>
+  <form (ngSubmit)="createBill()">
+    <label>Household</label>
+    <select [(ngModel)]="newBill.householdId" name="householdId" required>
+      <option value="" disabled>Select a household</option>
+      <option *ngFor="let h of households" [value]="h._id">{{ h.name }}</option>
+    </select>
+    <br/>
+    <label>Bill Type</label>
+    <select [(ngModel)]="newBill.billTypeId" name="billTypeId" required>
+      <option value="" disabled>Select a type</option>
+      <option *ngFor="let t of billTypes" [value]="t._id">{{ t.name }}</option>
+    </select>
+    <br/>
+    <label>Description</label>
+    <input type="text" [(ngModel)]="newBill.description" name="description" required />
+    <br/>
+    <label>Total Amount (€)</label>
+    <input type="number" [(ngModel)]="newBill.totalAmount" name="totalAmount" min="0" required />
+    <br/>
+    <label>Start Date</label>
+    <input type="date" [(ngModel)]="newBill.startDate" name="startDate" required />
+    <br/>
+    <label>End Date</label>
+    <input type="date" [(ngModel)]="newBill.endDate" name="endDate" required />
+    <br/>
+    <button type="submit">Create Bill</button>
+  </form>
+</div>
 
-  <label>Total Amount (€)</label>
-  <input type="number" [(ngModel)]="newBill.totalAmount" name="totalAmount" min="0" required />
-  <br/>
+<!-- DETAIL -->
+<div *ngIf="activeTab === 'detail'">
+  <h3>Bill Detail</h3>
+  <p *ngIf="!selectedBill">Select a bill from the View tab to see its details.</p>
+  <div *ngIf="selectedBill">
+    <p><strong>Description:</strong> {{ selectedBill.description }}</p>
+    <p><strong>Total:</strong> €{{ selectedBill.totalAmount }}</p>
+    <p><strong>Bill Type:</strong> {{ getBillTypeName(selectedBill.billTypeId) }}</p>
+    <p><strong>Household:</strong> {{ getHouseholdName(selectedBill.householdId) }}</p>
+    <p><strong>Status:</strong> {{ selectedBill.isClosed ? 'Closed' : 'Open' }}</p>
 
-  <label>Bill Type</label>
-  <select [(ngModel)]="newBill.billTypeId" name="billTypeId" required>
-    <option value="" disabled>Select a type</option>
-    <option *ngFor="let type of billTypes" [value]="type._id">{{ type.name }}</option>
-  </select>
-  <br/>
-
-  <label>Start Date</label>
-  <input type="date" [(ngModel)]="newBill.startDate" name="startDate" required />
-  <br/>
-
-  <label>End Date</label>
-  <input type="date" [(ngModel)]="newBill.endDate" name="endDate" required />
-  <br/>
-
-  <label>
-    <input type="checkbox" [(ngModel)]="newBill.isClosed" name="isClosed" />
-    Closed
-  </label>
-  <br/>
-
-  <button type="submit">Add Bill</button>
-
-</form>
-
-<h3>Household Bills</h3>
-<ul>
-  <li *ngFor="let bill of bills">
-    <strong>{{ bill.description }}</strong> - €{{ bill.totalAmount }} - {{ bill.billTypeId }}
-  </li>
-</ul>
-<hr />
+    <h4>Allocations</h4>
+    <ul>
+      <li *ngFor="let a of allocations">
+        Owes: €{{ a.amountOwed }} |
+        Paid: €{{ a.amountPaid }} |
+        Outstanding: €{{ a.amountOwed - a.amountPaid }} |
+        Status: <strong>{{ a.status }}</strong>
+      </li>
+    </ul>
+    <button (click)="setTab('view')">Back</button>
+  </div>
+</div>

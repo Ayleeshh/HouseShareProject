@@ -1,12 +1,10 @@
 import {
   IsBoolean,
   IsDateString,
-  IsInt,
-  IsNotEmpty,
+  IsNotEmpty, IsNumber,
   IsString,
   Min,
 } from 'class-validator';
-import {Prop} from "@nestjs/mongoose";
 
 export class CreateBillDto {
   @IsString()
@@ -21,7 +19,7 @@ export class CreateBillDto {
   @IsNotEmpty()
   description: string;
 
-  @IsInt()
+  @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   totalAmount: number;
 
@@ -30,8 +28,5 @@ export class CreateBillDto {
 
   @IsDateString()
   endDate: string;
-
-  @IsBoolean()
-  isClosed:boolean;
 
 }

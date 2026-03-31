@@ -1,24 +1,25 @@
-import { Component, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgForOf, NgIf } from '@angular/common';
 import { BillTypeService } from '../services/bill-type.service';
+import { HouseholdService } from '../services/household.service';
 import { BillType } from '../models/bill-type';
-import {FormsModule} from "@angular/forms";
-import {NgForOf} from "@angular/common";
-import {Household} from "../models/household";
-import {HouseholdService} from "../services/household.service";
+import { Household } from '../models/household';
 
 @Component({
   selector: 'app-bill-types',
   standalone: true,
-  imports: [
-    FormsModule,
-    NgForOf
-  ],
+  imports: [FormsModule, NgForOf, NgIf],
   templateUrl: './bill-types.component.html',
   styleUrl: './bill-types.component.css'
 })
-export class BillTypesComponent {
+export class BillTypesComponent implements OnInit {
+  activeTab: 'view' | 'create' | 'edit' = 'view';
+
   billTypes: BillType[] = [];
   households: Household[] = [];
+  selectedBillType: BillType | null = null;
+
   newBillType = {
     name: '',
     householdId: ''
@@ -34,31 +35,49 @@ export class BillTypesComponent {
     this.loadHouseholds();
   }
 
-  loadBillTypes() {
-    this.billTypeService.getBillTypes().subscribe((res) => {
-      this.billTypes = res;
-    });
+  setTab(tab: 'view' | 'create' | 'edit') {
+    this.activeTab = tab;
   }
 
-  loadHouseholds() {  // add this method
-    this.householdService.getHouseholds().subscribe((res) => {
-      this.households = res;
-    });
+  loadBillTypes() {
+    this.billTypeService.getBillTypes().subscribe(res => this.billTypes = res);
+  }
+
+  loadHouseholds() {
+    this.householdService.getHouseholds().subscribe(res => this.households = res);
+  }
+
+  getHouseholdName(id: string): string {
+    return this.households.find(h => h._id === id)?.name ?? 'Unknown';
   }
 
   createBillType() {
-    // console.log('householdId is:', this.householdId);
-    if (!this.newBillType || !this.newBillType.householdId) return;
-    this.billTypeService.createBillType(this.newBillType).subscribe(()=>{
+    if (!this.newBillType.name || !this.newBillType.householdId) return;
+    this.billTypeService.createBillType(this.newBillType).subscribe(() => {
+      this.newBillType = { name: '', householdId: '' };
       this.loadBillTypes();
-      this.resetForm();
+      this.setTab('view');
     });
   }
 
-  resetForm() {
-    this.newBillType = {
-      name: '',
-      householdId: ''
-    };
+  selectBillType(billType: BillType) {
+    this.selectedBillType = { ...billType };
+    this.setTab('edit');
+  }
+
+  updateBillType() {
+    if (!this.selectedBillType?._id) return;
+    this.billTypeService.updateBillType(this.selectedBillType._id, this.selectedBillType).subscribe(() => {
+      this.selectedBillType = null;
+      this.loadBillTypes();
+      this.setTab('view');
+    });
+  }
+
+  deleteBillType(id: string) {
+    if (!confirm('Are you sure you want to delete this bill type?')) return;
+    this.billTypeService.deleteBillType(id).subscribe(() => {
+      this.loadBillTypes();
+    });
   }
 }

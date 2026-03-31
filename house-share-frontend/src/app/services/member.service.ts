@@ -18,4 +18,16 @@ export class MemberService {
   getMembers(): Observable<Member[]> {
     return this.http.get<Member[]>(this.apiUrl);
   }
+
+  getMembersByHousehold(householdId: string): Observable<Member[]> {
+    return this.http.get<Member[]>(`${this.apiUrl}/household/${householdId}`);
+  }
+
+  updateMember(id: string, data: Partial<Member>): Observable<Member> {
+    return this.http.patch<Member>(`${this.apiUrl}/${id}`, data);
+  }
+
+  deleteMember(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }

@@ -1,5 +1,5 @@
 export interface Household {
   _id?: string;
   name: string;
-  members?: string[];
+  memberIds?: string[];
 }

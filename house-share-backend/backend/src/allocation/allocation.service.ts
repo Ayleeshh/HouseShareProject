@@ -1,13 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import {InjectModel} from "@nestjs/mongoose";
-import {Allocation, AllocationDocument} from "./schemas/allocation.schema";
-import {Model} from "mongoose";
+import { InjectModel } from '@nestjs/mongoose';
+import { Allocation, AllocationDocument } from './schemas/allocation.schema';
+import { Model } from 'mongoose';
+import { Bill, BillDocument } from '../bills/schemas/bill.schema';
 
 @Injectable()
 export class AllocationService {
     constructor(
         @InjectModel(Allocation.name)
         private allocationModel: Model<AllocationDocument>,
+
+        @InjectModel(Bill.name)           // ← inject Bill model directly
+        private billModel: Model<BillDocument>,
     ) {}
 
     async create(dto: Partial<Allocation>) {
@@ -28,11 +32,10 @@ export class AllocationService {
 
     async checkAndCloseBill(billId: string) {
         const allocations = await this.allocationModel.find({ billId });
-
         const allPaid = allocations.every(a => a.status === 'paid');
 
         if (allPaid) {
-            // update bill status
+            await this.billModel.findByIdAndUpdate(billId, { isClosed: true });
         }
     }
 }

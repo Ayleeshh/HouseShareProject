@@ -22,4 +22,9 @@ export class BillService {
   getBill(id: string): Observable<Bill> {
     return this.http.get<Bill>(`${this.apiUrl}/${id}`);
   }
+
+  deleteBill(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
 }

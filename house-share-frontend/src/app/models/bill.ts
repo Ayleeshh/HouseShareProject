@@ -4,7 +4,7 @@ export interface Bill {
   billTypeId: string;
   description: string;
   totalAmount: number;
-  startDate?: String;
-  endDate?: String;
+  startDate?: string;
+  endDate?: string;
   isClosed?: boolean;
 }

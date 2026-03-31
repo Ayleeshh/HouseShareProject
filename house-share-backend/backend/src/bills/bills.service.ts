@@ -49,4 +49,8 @@ export class BillsService {
     return this.billModel.findById(id);
   }
 
+  async delete(id: string) {
+    return this.billModel.findByIdAndDelete(id);
+  }
+
 }

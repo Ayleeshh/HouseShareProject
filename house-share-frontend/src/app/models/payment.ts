@@ -3,5 +3,5 @@ export interface Payment {
   allocationId: string;
   memberId: string;
   amount: number;
-  paidAt: Date;
+  paidAt: string;
 }

@@ -9,7 +9,7 @@ export class Household {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ default: '' })
+  @Prop({ default: [] })
   memberIds: string[];
 }
 

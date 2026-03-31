@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: #f5f5f5;
+}
+
+.app-wrapper {
+  min-height: 100vh;
+}
+
+/* ── Navbar ── */
+.navbar {
+  background: #a78bfa; /* purple */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 56px;
+}
+
+.brand {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  opacity: 0.85;
+  transition: opacity 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  opacity: 1;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ── Page content ── */
+.page-content {
+  padding: 2rem;
+}
+
+/* ── Bills grid (use in your bills component) ── */
+.bills-header {
+  font-size: 1rem;
+  color: #444;
+  margin-bottom: 1.5rem;
+}
+
+.bills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+/* ── Bill card ── */
+.bill-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.bill-card.paid {
+  background: #d1fae5; /* green tint */
+  border-color: #a7f3d0;
+}
+
+.bill-card-image {
+  width: 100%;
+  height: 160px;
+  background-image:
+    repeating-conic-gradient(#ccc 0% 25%, #f0f0f0 0% 50%);
+  background-size: 20px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bill-card-image h2 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #111;
+  background: rgba(255,255,255,0.5);
+  padding: 0.25rem 1rem;
+  border-radius: 8px;
+}
+
+.bill-card-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+}
+
+.bill-card-body p {
+  font-size: 0.9rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.bill-card-body p span {
+  font-weight: 700;
+}
+
+/* ── Pay button ── */
+.pay-btn {
+  margin: 0 1.25rem 1.25rem;
+  background: #6d5acd;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 0.7rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: 'Nunito', sans-serif;
+}
+
+.pay-btn:hover:not(:disabled) {
+  background: #5a48b8;
+}
+
+.pay-btn:disabled {
+  background: #9e9e9e;
+  cursor: not-allowed;
+}

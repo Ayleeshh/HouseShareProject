@@ -1,23 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgForOf, NgIf } from '@angular/common';
 import { HouseholdService } from '../services/household.service';
-import {Household} from '../models/household'
-import {FormsModule} from "@angular/forms";
-import {NgForOf} from "@angular/common";
+import { Household } from '../models/household';
 
 @Component({
   selector: 'app-households',
   standalone: true,
-  imports: [
-    FormsModule,
-    NgForOf
-  ],
+  imports: [FormsModule, NgForOf, NgIf],
   templateUrl: './households.component.html',
   styleUrl: './households.component.css'
 })
+export class HouseholdsComponent implements OnInit {
+  activeTab: 'create' | 'view' | 'edit' = 'view';
 
-export class HouseholdsComponent {
   households: Household[] = [];
   newHouseholdName = '';
+  selectedHousehold: Household | null = null;
 
   constructor(private householdService: HouseholdService) {}
 
@@ -26,18 +25,45 @@ export class HouseholdsComponent {
   }
 
   loadHouseholds() {
-    this.householdService.getHouseholds().subscribe((res) => {
-      this.households = res;
+    this.householdService.getHouseholds().subscribe(res => this.households = res);
+  }
+
+  setTab(tab: 'create' | 'view' | 'edit') {
+    this.activeTab = tab;
+  }
+
+  // CREATE
+  createHousehold() {
+    if (!this.newHouseholdName) return;
+    this.householdService.createHousehold({ name: this.newHouseholdName }).subscribe(() => {
+      this.newHouseholdName = '';
+      this.loadHouseholds();
+      this.setTab('view');  // switch to view after creating
     });
   }
 
-  createHousehold() {
-    if (!this.newHouseholdName) return;
+  // SELECT FOR EDIT
+  selectHousehold(household: Household) {
+    this.selectedHousehold = { ...household };
+    this.setTab('edit');  // switch to edit tab when Edit clicked
+  }
+
+  // UPDATE
+  updateHousehold() {
+    if (!this.selectedHousehold?._id) return;
     this.householdService
-      .createHousehold({_id: "", members: [], name: this.newHouseholdName })
+      .updateHousehold(this.selectedHousehold._id, { name: this.selectedHousehold.name })
       .subscribe(() => {
-        this.newHouseholdName = '';
+        this.selectedHousehold = null;
         this.loadHouseholds();
+        this.setTab('view');  // back to view after saving
       });
+  }
+
+  deleteHousehold(id: string) {
+    if (!confirm('Are you sure you want to delete this household?')) return;
+    this.householdService.deleteHousehold(id).subscribe(() => {
+      this.loadHouseholds();
+    });
   }
 }

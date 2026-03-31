@@ -5,13 +5,13 @@ export type PaymentDocument = Payment & Document;
 
 @Schema({ timestamps: true })
 export class Payment {
-    @Prop()
+    @Prop({ required: true })
     allocationId: string;
 
-    @Prop()
+    @Prop({ required: true })
     memberId: string;
 
-    @Prop()
+    @Prop({ required: true })
     amount: number;
 
     @Prop({ default: Date.now })

@@ -1,6 +1,6 @@
 import {
   Body,
-  Controller,
+  Controller, Delete,
   Get,
   Param,
   Patch,
@@ -27,5 +27,10 @@ export class BillsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.billsService.findOne(id);
+  }
+
+  @Delete(':id')
+  delete(@Param('id') id: string) {
+    return this.billsService.delete(id);
   }
 }

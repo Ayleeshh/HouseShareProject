@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Param } from '@nestjs/common';
+import {Controller, Post, Get, Body, Param, Patch, Delete} from '@nestjs/common';
 import { MembersService } from './members.service';
 import { CreateMemberDto } from './dto/create-member.dto';
 
@@ -19,5 +19,15 @@ export class MembersController {
     @Get('household/:householdId')
     findByHousehold(@Param('householdId') householdId: string) {
         return this.membersService.findByHousehold(householdId);
+    }
+
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() dto: Partial<CreateMemberDto>) {
+        return this.membersService.update(id, dto);
+    }
+
+    @Delete(':id')
+    delete(@Param('id') id: string) {
+        return this.membersService.delete(id);
     }
 }

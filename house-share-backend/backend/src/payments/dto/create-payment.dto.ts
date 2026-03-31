@@ -1,17 +1,11 @@
 import {
   IsDateString,
-  IsInt,
-  IsNotEmpty,
+  IsNotEmpty, IsNumber,
   IsString,
   Min,
 } from 'class-validator';
-import {Prop} from "@nestjs/mongoose";
 
 export class CreatePaymentDto {
-  @IsString()
-  @IsNotEmpty()
-  billId: string;
-
   @IsString()
   @IsNotEmpty()
   memberId: string;
@@ -20,7 +14,7 @@ export class CreatePaymentDto {
   @IsNotEmpty()
   allocationId: string;
 
-  @IsInt()
+  @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   amount: number;
 

@@ -1,41 +1,81 @@
-<h3>Create a Member</h3>
+<div class="tabs">
+  <button (click)="setTab('view')"   [class.active]="activeTab === 'view'">View</button>
+  <button (click)="setTab('create')" [class.active]="activeTab === 'create'">Create</button>
+  <button (click)="setTab('edit')"   [class.active]="activeTab === 'edit'">Edit</button>
+</div>
 
-<form (ngSubmit)="createMember()">
+<!-- VIEW -->
+<div *ngIf="activeTab === 'view'">
+  <h3>All Members</h3>
+  <ul>
+    <li *ngFor="let m of members">
+      <strong>{{ m.name }}</strong> — {{ m.email }} —
+      {{ getHouseholdName(m.householdId) }} —
+      {{ m.isAdmin ? 'Admin' : 'Member' }} —
+      {{ m.isActive ? 'Active' : 'Inactive' }}
+      <button (click)="selectMember(m)">Edit</button>
+      <button class="delete-btn" (click)="deleteMember(m._id!)">Delete</button>
+    </li>
+  </ul>
+</div>
 
-  <label>Name </label>
-  <input type="text" [(ngModel)]="newMember.name" name="name" required />
-<br/>
-  <label>Email </label>
-  <input type="email" [(ngModel)]="newMember.email" name="email" />
-  <br/>
-  <label>Household </label>
-  <select [(ngModel)]="newMember.householdId" name="householdId" required>
-    <option value="" disabled>Select a household</option>
-    <option *ngFor="let h of households" [value]="h._id">{{ h.name }}</option>
-  </select>
-  <br/>
-  <label>
-    <input type="checkbox" [(ngModel)]="newMember.isAdmin" name="isAdmin" />
-    Admin
-  </label>
-  <br/>
-  <label>
-    <input type="checkbox" [(ngModel)]="newMember.isActive" name="isActive" />
-    Active
-  </label>
-  <br/>
-  <button type="submit">Add Member</button>
+<!-- CREATE -->
+<div *ngIf="activeTab === 'create'">
+  <h3>Add a Member</h3>
+  <form (ngSubmit)="createMember()">
+    <label>Name</label>
+    <input type="text" [(ngModel)]="newMember.name" name="name" required />
+    <br/>
+    <label>Email</label>
+    <input type="email" [(ngModel)]="newMember.email" name="email" required />
+    <br/>
+    <label>Household</label>
+    <select [(ngModel)]="newMember.householdId" name="householdId" required>
+      <option value="" disabled>Select a household</option>
+      <option *ngFor="let h of households" [value]="h._id">{{ h.name }}</option>
+    </select>
+    <br/>
+    <label>
+      <input type="checkbox" [(ngModel)]="newMember.isAdmin" name="isAdmin" />
+      Admin
+    </label>
+    <br/>
+    <label>
+      <input type="checkbox" [(ngModel)]="newMember.isActive" name="isActive" />
+      Active
+    </label>
+    <br/>
+    <button type="submit">Add Member</button>
+  </form>
+</div>
 
-</form>
-
-<h3>Members</h3>
-
-<ul>
-  <li *ngFor="let member of members">
-    <strong>Name:</strong> {{ member.name }}<br/>
-    <strong>Email:</strong> {{ member.email }}<br/>
-    <strong>Admin?:</strong> {{ member.isAdmin }}<br/>
-    <strong>Household: </strong> <span *ngFor="let h of households">{{ h.name }}</span>
-  </li>
-</ul>
-<hr />
+<!-- EDIT -->
+<div *ngIf="activeTab === 'edit'">
+  <h3>Edit Member</h3>
+  <p *ngIf="!selectedMember">Select a member from the View tab to edit them.</p>
+  <form *ngIf="selectedMember" (ngSubmit)="updateMember()">
+    <label>Name</label>
+    <input type="text" [(ngModel)]="selectedMember.name" name="name" required />
+    <br/>
+    <label>Email</label>
+    <input type="email" [(ngModel)]="selectedMember.email" name="email" required />
+    <br/>
+    <label>Household</label>
+    <select [(ngModel)]="selectedMember.householdId" name="householdId" required>
+      <option *ngFor="let h of households" [value]="h._id">{{ h.name }}</option>
+    </select>
+    <br/>
+    <label>
+      <input type="checkbox" [(ngModel)]="selectedMember.isAdmin" name="isAdmin" />
+      Admin
+    </label>
+    <br/>
+    <label>
+      <input type="checkbox" [(ngModel)]="selectedMember.isActive" name="isActive" />
+      Active
+    </label>
+    <br/>
+    <button type="submit">Save Changes</button>
+    <button type="button" (click)="setTab('view')">Cancel</button>
+  </form>
+</div>

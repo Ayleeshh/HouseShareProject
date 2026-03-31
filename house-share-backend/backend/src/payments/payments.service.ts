@@ -40,4 +40,8 @@ export class PaymentsService {
   async findByBill(billId: string) {
     return this.paymentModel.find({ billId });
   }
+
+  async findByAllocation(allocationId: string) {
+    return this.paymentModel.find({ allocationId });
+  }
 }
