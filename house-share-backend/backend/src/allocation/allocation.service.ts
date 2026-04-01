@@ -38,4 +38,8 @@ export class AllocationService {
             await this.billModel.findByIdAndUpdate(billId, { isClosed: true });
         }
     }
+
+    async findByMember(memberId: string) {
+        return this.allocationModel.find({ memberId });
+    }
 }

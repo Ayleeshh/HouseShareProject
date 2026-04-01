@@ -18,4 +18,5 @@ export class PaymentService {
   getPaymentsByAllocation(allocationId: string): Observable<Payment[]> {
     return this.http.get<Payment[]>(`${this.apiUrl}/allocation/${allocationId}`);
   }
+
 }

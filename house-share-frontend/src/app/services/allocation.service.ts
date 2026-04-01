@@ -3,9 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Allocation } from '../models/allocation';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AllocationService {
   private apiUrl = 'http://localhost:3000/allocations';
 
@@ -15,7 +13,10 @@ export class AllocationService {
     return this.http.get<Allocation[]>(`${this.apiUrl}/bill/${billId}`);
   }
 
-  getAllocationById(id: string): Observable<Allocation> {
-    return this.http.get<Allocation>(`${this.apiUrl}/${id}`);
+  getAllocationsByMember(memberId: string): Observable<Allocation[]> {
+    return this.http.get<Allocation[]>(`${this.apiUrl}/member/${memberId}`);
   }
+
+
+
 }

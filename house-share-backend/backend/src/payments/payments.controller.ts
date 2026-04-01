@@ -20,4 +20,5 @@ export class PaymentsController {
   findByAllocation(@Param('allocationId') allocationId: string) {
     return this.paymentsService.findByAllocation(allocationId);
   }
+
 }

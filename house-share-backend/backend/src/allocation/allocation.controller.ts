@@ -14,4 +14,9 @@ export class AllocationController {
     findOne(@Param('id') id: string) {
         return this.allocationService.findById(id);
     }
+
+    @Get('member/:memberId')
+    findByMember(@Param('memberId') memberId: string) {
+        return this.allocationService.findByMember(memberId);
+    }
 }

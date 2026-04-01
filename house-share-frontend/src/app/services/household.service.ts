@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {map, Observable} from 'rxjs';
 import { Household } from '../models/household';
 
 @Injectable({
@@ -25,5 +25,15 @@ export class HouseholdService {
 
   deleteHousehold(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  getHousehold(id: string): Observable<Household> {
+    return this.getHouseholds().pipe(
+      map((households: Household[]) => {
+        const found = households.find(h => h._id === id);
+        if (!found) throw new Error('Household not found');
+        return found;
+      })
+    );
   }
 }

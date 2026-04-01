@@ -27,4 +27,8 @@ export class BillService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
+  updateBill(id: string, data: Partial<Bill>): Observable<Bill> {
+    return this.http.patch<Bill>(`${this.apiUrl}/${id}`, data);
+  }
+
 }

@@ -1,52 +1,61 @@
-<div class="tabs">
-  <button (click)="setTab('view')"   [class.active]="activeTab === 'view'">View</button>
-  <button (click)="setTab('create')" [class.active]="activeTab === 'create'">Create</button>
-  <button (click)="setTab('edit')"   [class.active]="activeTab === 'edit'">Edit</button>
-</div>
+<div class="page">
 
-<!-- VIEW -->
-<div *ngIf="activeTab === 'view'">
-  <h3>All Bill Types</h3>
-  <ul>
-    <li *ngFor="let b of billTypes">
-      <strong>{{ b.name }}</strong> — {{ getHouseholdName(b.householdId) }}
-      <button (click)="selectBillType(b)">Edit</button>
-      <button class="delete-btn" (click)="deleteBillType(b._id!)">Delete</button>
-    </li>
-  </ul>
-</div>
+  <!-- Create Modal -->
+  <div class="modal-backdrop" *ngIf="showCreateModal" (click)="closeCreateModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Create Bill Type</h3>
+        <button class="close-btn" (click)="closeCreateModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <label>Name</label>
+        <input type="text" [(ngModel)]="newBillType.name" placeholder="e.g. Electricity" />
+      </div>
+      <button class="submit-btn" (click)="createBillType()">Create Bill Type</button>
+    </div>
+  </div>
 
-<!-- CREATE -->
-<div *ngIf="activeTab === 'create'">
-  <h3>Create a Bill Type</h3>
-  <form (ngSubmit)="createBillType()">
-    <label>Name</label>
-    <input type="text" [(ngModel)]="newBillType.name" name="name" required />
-    <br/>
-    <label>Household</label>
-    <select [(ngModel)]="newBillType.householdId" name="householdId" required>
-      <option value="" disabled>Select a household</option>
-      <option *ngFor="let h of households" [value]="h._id">{{ h.name }}</option>
-    </select>
-    <br/>
-    <button type="submit">Create Bill Type</button>
-  </form>
-</div>
+  <!-- Edit Modal -->
+  <div class="modal-backdrop" *ngIf="showEditModal && selectedBillType" (click)="closeEditModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Edit Bill Type</h3>
+        <button class="close-btn" (click)="closeEditModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <label>Name</label>
+        <input type="text" [(ngModel)]="selectedBillType!.name" />
+      </div>
+      <button class="submit-btn" (click)="updateBillType()">Save Changes</button>
+    </div>
+  </div>
 
-<!-- EDIT -->
-<div *ngIf="activeTab === 'edit'">
-  <h3>Edit Bill Type</h3>
-  <p *ngIf="!selectedBillType">Select a bill type from the View tab to edit it.</p>
-  <form *ngIf="selectedBillType" (ngSubmit)="updateBillType()">
-    <label>Name</label>
-    <input type="text" [(ngModel)]="selectedBillType.name" name="name" required />
-    <br/>
-    <label>Household</label>
-    <select [(ngModel)]="selectedBillType.householdId" name="householdId" required>
-      <option *ngFor="let h of households" [value]="h._id">{{ h.name }}</option>
-    </select>
-    <br/>
-    <button type="submit">Save Changes</button>
-    <button type="button" (click)="setTab('view')">Cancel</button>
-  </form>
+  <h1 class="page-title">{{ getHouseholdName(currentUser?.householdId ?? '') }} Bill Types</h1>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>Bill Types</h2>
+      <button class="create-btn" (click)="openCreateModal()">+ Create Bill Type</button>
+    </div>
+    <table class="data-table">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th class="manage-col">Manage</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let b of billTypes">
+        <td>{{ b.name }}</td>
+        <td class="manage-col">
+          <button class="icon-btn" (click)="openEditModal(b)" title="Edit">✏️</button>
+          <button class="icon-btn" (click)="deleteBillType(b._id!)" title="Delete">🗑️</button>
+        </td>
+      </tr>
+      <tr *ngIf="billTypes.length === 0">
+        <td colspan="2" class="empty">No bill types found</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

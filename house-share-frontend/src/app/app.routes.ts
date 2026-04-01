@@ -1,18 +1,24 @@
 import { Routes } from '@angular/router';
-import {BillsComponent} from "./bills/bills.component";
-import {BillTypesComponent} from "./bill-types/bill-types.component";
-import {MembersComponent} from "./members/members.component";
-import {HouseholdsComponent} from "./households/households.component";
-import {PaymentsComponent} from "./payments/payments.component";
+import { BillsComponent } from "./bills/bills.component";
+import { BillTypesComponent } from "./bill-types/bill-types.component";
+import { MembersComponent } from "./members/members.component";
+import { HouseholdsComponent } from "./households/households.component";
+import { PaymentsComponent } from "./payments/payments.component";
 import { AdminComponent } from './admin/admin.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import {MyBillsComponent} from "./my-bills/my-bills.component"; // ← new
 
 export const routes: Routes = [
-  { path: 'admin', component: AdminComponent },  // ← add this
+  { path: 'dashboard', component: DashboardComponent },  // ← new
+  { path: 'admin', component: AdminComponent },
   { path: 'bill-types', component: BillTypesComponent },
   { path: 'bills', component: BillsComponent },
   { path: 'members', component: MembersComponent },
   { path: 'households', component: HouseholdsComponent },
   { path: 'payments', component: PaymentsComponent },
-  { path: '', redirectTo: 'admin', pathMatch: 'full' },  // ← start on admin
-  { path: '**', redirectTo: 'admin' }
+  { path: 'dashboard', component: DashboardComponent },
+  { path: 'my-bills', component: MyBillsComponent },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' }, // ← start on dashboard
+  { path: '**', redirectTo: 'dashboard' },
 ];

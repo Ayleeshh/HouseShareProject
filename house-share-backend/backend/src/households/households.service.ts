@@ -25,4 +25,6 @@ export class HouseholdsService {
     async delete(id: string) {
         return this.householdModel.findByIdAndDelete(id);
     }
+
+
 }

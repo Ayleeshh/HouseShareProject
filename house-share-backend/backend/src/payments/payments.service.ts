@@ -44,4 +44,7 @@ export class PaymentsService {
   async findByAllocation(allocationId: string) {
     return this.paymentModel.find({ allocationId });
   }
+
+
+
 }

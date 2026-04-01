@@ -1,16 +1,56 @@
 <div class="app-wrapper">
-  <nav class="navbar">
-    <span class="brand">House Share App</span>
-    <div class="nav-links">
-      <a routerLink="/bills" routerLinkActive="active">Household Bills</a>
-      <a routerLink="/payments" routerLinkActive="active">Payments</a>
-      <a routerLink="/members" routerLinkActive="active">Members</a>
-      <a routerLink="/bill-types" routerLinkActive="active">Bill Types</a>
-      <a routerLink="/households" routerLinkActive="active">Households</a>
-      <a routerLink="/admin" routerLinkActive="active">Admin</a>
+  <aside class="sidebar">
+    <div class="brand">House Share App</div>
+    <nav class="sidebar-nav">
+
+      <a routerLink="/dashboard" routerLinkActive="active">📊 Household Dashboard</a>
+      <a routerLink="/bills" routerLinkActive="active">🧾 Household Bills</a>
+      <a routerLink="/my-bills" routerLinkActive="active">💳 My Bills</a>
+
+      <ng-container *ngIf="currentUser?.isAdmin">
+        <div class="nav-group-label">Manage</div>
+        <a routerLink="/households" routerLinkActive="active" class="nav-sub">🏠 Households</a>
+        <a routerLink="/members" routerLinkActive="active" class="nav-sub">👤 Members</a>
+        <a routerLink="/bill-types" routerLinkActive="active" class="nav-sub">🔌 Bill Types</a>
+        <a routerLink="/admin" routerLinkActive="active" class="nav-sub">💰 Bills</a>
+      </ng-container>
+
+    </nav>
+  </aside>
+
+  <div class="main-area">
+    <header class="top-header">
+      <span class="page-title">Household Dashboard</span>
+
+      <!-- Custom dropdown -->
+      <div class="user-dropdown" *ngIf="currentUser">
+        <button class="dropdown-trigger" (click)="toggleDropdown()">
+          <div class="avatar">{{ currentUser.name.charAt(0) }}</div>
+          <span class="username">{{ currentUser.name }}</span>
+          <span class="chevron" [class.open]="dropdownOpen">▾</span>
+        </button>
+
+        <div class="dropdown-menu" *ngIf="dropdownOpen">
+          <div class="dropdown-header">Switch User</div>
+          <button
+            *ngFor="let user of memberService.availableUsers"
+            class="dropdown-item"
+            [class.active]="user._id === currentUser._id"
+            (click)="selectUser(user._id!)">
+            <div class="avatar small">{{ user.name.charAt(0) }}</div>
+            <div class="user-info">
+              <span class="user-name">{{ user.name }}</span>
+              <span class="user-role">{{ user.isAdmin ? 'Admin' : 'Member' }}</span>
+            </div>
+            <span class="check" *ngIf="user._id === currentUser._id">✓</span>
+          </button>
+        </div>
+      </div>
+
+    </header>
+
+    <div class="page-content" (click)="closeDropdown()">
+      <router-outlet></router-outlet>
     </div>
-  </nav>
-  <div class="page-content">
-    <router-outlet></router-outlet>
   </div>
 </div>
