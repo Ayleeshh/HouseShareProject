@@ -6,13 +6,11 @@
       <a routerLink="/dashboard" routerLinkActive="active">📊 Household Dashboard</a>
       <a routerLink="/bills" routerLinkActive="active">🧾 Household Bills</a>
       <a routerLink="/my-bills" routerLinkActive="active">💳 My Bills</a>
+      <a routerLink="/members" routerLinkActive="active">👤 Household Members</a>
+
 
       <ng-container *ngIf="currentUser?.isAdmin">
-        <div class="nav-group-label">Manage</div>
-        <a routerLink="/households" routerLinkActive="active" class="nav-sub">🏠 Households</a>
-        <a routerLink="/members" routerLinkActive="active" class="nav-sub">👤 Members</a>
-        <a routerLink="/bill-types" routerLinkActive="active" class="nav-sub">🔌 Bill Types</a>
-        <a routerLink="/admin" routerLinkActive="active" class="nav-sub">💰 Bills</a>
+        <a routerLink="/bill-types" routerLinkActive="active" >🔌 Bill Types</a>
       </ng-container>
 
     </nav>
@@ -43,6 +41,16 @@
               <span class="user-role">{{ user.isAdmin ? 'Admin' : 'Member' }}</span>
             </div>
             <span class="check" *ngIf="user._id === currentUser._id">✓</span>
+          </button>
+
+          <!-- ← Add this divider + button -->
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item new-household" (click)="goToSetup()">
+            <div class="avatar small plus">+</div>
+            <div class="user-info">
+              <span class="user-name">New Household</span>
+              <span class="user-role">Create a new household</span>
+            </div>
           </button>
         </div>
       </div>

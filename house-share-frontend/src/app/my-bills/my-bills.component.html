@@ -30,7 +30,6 @@
   <div class="card">
     <div class="card-header">
       <h2>Your Unpaid Bills</h2>
-      <button class="view-all-btn">View all</button>
     </div>
     <table class="bills-table">
       <thead>
@@ -60,27 +59,24 @@
   <!-- Paid Bills -->
   <div class="card">
     <div class="card-header">
-      <h2>Your Previously Paid Bills</h2>
-      <button class="view-all-btn">View all</button>
+      <h2>Your Payment History</h2>
     </div>
     <table class="bills-table">
       <thead>
       <tr>
         <th>Bill Type</th>
-        <th>Total Amount</th>
-        <th>Amount Collected</th>
-        <th>End Date</th>
+        <th>Amount Paid</th>
+        <th>Date Paid</th>
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let a of paidAllocations">
-        <td>{{ getBillTypeName(getBillForAllocation(a)?.billTypeId ?? '') }}</td>
-        <td>€{{ a.amountOwed.toFixed(2) }}</td>
-        <td>€{{ a.amountPaid.toFixed(2) }}</td>
-        <td>{{ getBillForAllocation(a)?.endDate | date:'dd/MM/yyyy' }}</td>
+      <tr *ngFor="let p of sortedPayments">
+        <td>{{ getBillTypeNameForPayment(p) }}</td>
+        <td>€{{ p.amount.toFixed(2) }}</td>
+        <td>{{ p.paidAt | date:'dd/MM/yyyy HH:mm' }}</td>
       </tr>
-      <tr *ngIf="paidAllocations.length === 0">
-        <td colspan="4" class="empty">No paid bills yet</td>
+      <tr *ngIf="payments.length === 0">
+        <td colspan="3" class="empty">No payments made yet</td>
       </tr>
       </tbody>
     </table>

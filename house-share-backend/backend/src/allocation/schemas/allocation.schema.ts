@@ -3,8 +3,6 @@ import { Document, Schema as MongooseSchema } from 'mongoose';
 
 export type AllocationDocument = Allocation & Document;
 
-export enum AllocationStatus { UNPAID = 'unpaid', PART_PAID = 'part-paid', PAID = 'paid' }
-
 @Schema({ timestamps: true })
 export class Allocation {
   @Prop({required: true})

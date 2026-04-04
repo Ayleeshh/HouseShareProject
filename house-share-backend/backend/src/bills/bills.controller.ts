@@ -3,9 +3,7 @@ import {
   Controller, Delete,
   Get,
   Param,
-  Patch,
   Post,
-  Query,
 } from '@nestjs/common';
 import { BillsService } from './bills.service';
 import { CreateBillDto } from './dto/create-bill.dto';

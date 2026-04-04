@@ -17,6 +17,4 @@ export class AllocationService {
     return this.http.get<Allocation[]>(`${this.apiUrl}/member/${memberId}`);
   }
 
-
-
 }

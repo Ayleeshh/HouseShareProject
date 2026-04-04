@@ -215,3 +215,19 @@
   color: #cc44cc;
   font-weight: bold;
 }
+
+.dropdown-divider {
+  height: 1px;
+  background: #f0f0f0;
+  margin: 4px 0;
+}
+
+.dropdown-item.new-household:hover {
+  background: #f0f0ff;
+}
+
+.avatar.plus {
+  background: #3333cc;
+  font-size: 1.1rem;
+  font-weight: bold;
+}

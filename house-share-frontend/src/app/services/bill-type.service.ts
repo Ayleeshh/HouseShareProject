@@ -19,10 +19,6 @@ export class BillTypeService {
     return this.http.get<BillType[]>(this.apiUrl);
   }
 
-  getBillTypesByHousehold(householdId: string): Observable<BillType[]> {
-    return this.http.get<BillType[]>(`${this.apiUrl}/household/${householdId}`);
-  }
-
   updateBillType(id: string, data: Partial<BillType>): Observable<BillType> {
     return this.http.patch<BillType>(`${this.apiUrl}/${id}`, data);
   }

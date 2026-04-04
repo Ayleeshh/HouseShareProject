@@ -18,9 +18,11 @@ export class BillsService {
   async create(dto: CreateBillDto) {
     const bill = await this.billModel.create(dto);
 
-    const members = await this.membersService.findActiveByHousehold(
+    const members = await this.membersService.findByHousehold(
         dto.householdId,
     );
+
+    console.log('Members:', members);
 
     const count = members.length;
 
@@ -52,5 +54,7 @@ export class BillsService {
   async delete(id: string) {
     return this.billModel.findByIdAndDelete(id);
   }
+
+
 
 }

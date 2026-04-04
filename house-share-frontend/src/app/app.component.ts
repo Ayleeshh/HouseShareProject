@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import {Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MemberService } from './services/member.service';
 import { Member } from './models/member';
@@ -15,7 +15,10 @@ export class AppComponent implements OnInit {
   currentUser: Member | null = null;
   dropdownOpen = false;
 
-  constructor(public memberService: MemberService) {}
+  constructor(
+    public memberService: MemberService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.memberService.currentUser$.subscribe((user: Member | null) => {
@@ -40,5 +43,10 @@ export class AppComponent implements OnInit {
   @HostListener('document:keydown.escape')
   onEscape() {
     this.dropdownOpen = false;
+  }
+
+  goToSetup() {
+    this.dropdownOpen = false;
+    this.router.navigate(['/setup']);
   }
 }

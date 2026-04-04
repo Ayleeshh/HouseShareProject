@@ -11,6 +11,7 @@ import { Bill } from '../models/bill';
 import { Allocation } from '../models/allocation';
 import { BillType } from '../models/bill-type';
 import { FormsModule } from '@angular/forms';
+import {Payment} from "../models/payment";
 
 @Component({
   selector: 'app-my-bills',
@@ -24,6 +25,7 @@ export class MyBillsComponent implements OnInit {
   bills: Bill[] = [];
   billTypes: BillType[] = [];
   myAllocations: Allocation[] = [];
+  payments: Payment[] = [];
 
   // Payment modal
   showPaymentModal = false;
@@ -53,16 +55,30 @@ export class MyBillsComponent implements OnInit {
     forkJoin({
       bills: this.billService.getBillsByHousehold(user.householdId),
       billTypes: this.billTypeService.getBillTypes(),
-      allocations: this.allocationService.getAllocationsByMember(user._id!)
-    }).subscribe(({ bills, billTypes, allocations }) => {
+      allocations: this.allocationService.getAllocationsByMember(user._id!),
+      payments: this.paymentService.getPaymentsByMember(user._id!)
+    }).subscribe(({ bills, billTypes, allocations, payments }) => {
       this.bills = bills;
       this.billTypes = billTypes;
       this.myAllocations = allocations;
+      this.payments = payments;
     });
+  }
+
+  getBillTypeNameForPayment(payment: Payment): string {
+    const alloc = this.myAllocations.find(a => a._id === payment.allocationId);
+    const bill = alloc ? this.getBillForAllocation(alloc) : undefined;
+    return bill ? this.getBillTypeName(bill.billTypeId) : 'Unknown';
   }
 
   getBillTypeName(billTypeId: string): string {
     return this.billTypes.find(t => t._id === billTypeId)?.name ?? 'Unknown';
+  }
+
+  get sortedPayments(): Payment[] {
+    return [...this.payments].sort(
+      (a, b) => new Date(b.paidAt).getTime() - new Date(a.paidAt).getTime()
+    );
   }
 
   getBillForAllocation(alloc: Allocation): Bill | undefined {
@@ -71,10 +87,6 @@ export class MyBillsComponent implements OnInit {
 
   get unpaidAllocations(): Allocation[] {
     return this.myAllocations.filter(a => a.status !== 'paid');
-  }
-
-  get paidAllocations(): Allocation[] {
-    return this.myAllocations.filter(a => a.status === 'paid');
   }
 
   get totalOwed(): number {

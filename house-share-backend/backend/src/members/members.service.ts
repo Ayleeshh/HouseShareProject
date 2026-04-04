@@ -23,10 +23,6 @@ export class MembersService {
         return this.memberModel.find({ householdId });
     }
 
-    async findActiveByHousehold(householdId: string) {
-        return this.memberModel.find({ householdId, isActive: true });
-    }
-
     async update(id: string, dto: Partial<CreateMemberDto>) {
         return this.memberModel.findByIdAndUpdate(id, dto, { new: true });
     }

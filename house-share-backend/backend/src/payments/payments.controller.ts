@@ -21,4 +21,9 @@ export class PaymentsController {
     return this.paymentsService.findByAllocation(allocationId);
   }
 
+  @Get('member/:memberId')
+  findByMember(@Param('memberId') memberId: string) {
+    return this.paymentsService.findByMember(memberId);
+  }
+
 }

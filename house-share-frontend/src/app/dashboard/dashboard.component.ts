@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { forkJoin, switchMap } from 'rxjs';
+import {forkJoin, of, switchMap} from 'rxjs';
 import { MemberService } from '../services/member.service';
 import { BillService } from '../services/bill.service';
 import { AllocationService } from '../services/allocation.service';
@@ -66,8 +66,7 @@ export class DashboardComponent implements OnInit {
           this.allocationService.getAllocationsByBill(bill._id!)
         );
 
-        return forkJoin(allocationRequests.length > 0 ? allocationRequests : [[]]);
-      })
+        return allocationRequests.length > 0 ? forkJoin(allocationRequests) : of([]);      })
     ).subscribe({
       next: (allocationArrays: Allocation[][]) => {
         this.allAllocations = allocationArrays.flat();
@@ -103,14 +102,6 @@ export class DashboardComponent implements OnInit {
     if (billAllocs.every(a => a.status === 'paid')) return 'paid';
     if (billAllocs.some(a => a.amountPaid > 0)) return 'part-paid';
     return 'unpaid';
-  }
-
-  getStatusClass(status: string): string {
-    return {
-      'paid': 'status-paid',
-      'part-paid': 'status-part',
-      'unpaid': 'status-unpaid'
-    }[status] ?? '';
   }
 
   getInitial(name: string): string {
