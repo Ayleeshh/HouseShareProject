@@ -9,10 +9,12 @@ export class AllocationService {
 
   constructor(private http: HttpClient) {}
 
+  // Returns allocation by bill id
   getAllocationsByBill(billId: string): Observable<Allocation[]> {
     return this.http.get<Allocation[]>(`${this.apiUrl}/bill/${billId}`);
   }
 
+  // Returns allocation by member id
   getAllocationsByMember(memberId: string): Observable<Allocation[]> {
     return this.http.get<Allocation[]>(`${this.apiUrl}/member/${memberId}`);
   }

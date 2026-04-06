@@ -3,6 +3,7 @@ import {
     IsString,
 } from 'class-validator';
 
+// Defines what data is allowed into BillType API
 export class CreateBillTypeDto {
     @IsString()
     @IsNotEmpty()

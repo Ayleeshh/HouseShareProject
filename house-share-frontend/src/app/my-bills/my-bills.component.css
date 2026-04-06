@@ -99,7 +99,7 @@
 
 .modal-body { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
 .modal-body label { font-size: 0.85rem; font-weight: 600; color: #444; }
-.modal-body input { padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95rem; width: 100%; box-sizing: border-box; }
+.modal-body input, select { padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95rem; width: 100%; box-sizing: border-box; }
 .modal-body input:disabled { background: #f5f5f5; color: #666; }
 
 .submit-pay-btn { width: 100%; background: #3333cc; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; }

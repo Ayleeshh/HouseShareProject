@@ -5,6 +5,7 @@ import {
   Min,
 } from 'class-validator';
 
+// Defines what data is allowed into Payment API
 export class CreatePaymentDto {
   @IsString()
   @IsNotEmpty()

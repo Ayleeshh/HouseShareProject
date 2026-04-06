@@ -1,11 +1,11 @@
 import {
-  IsBoolean,
   IsDateString,
   IsNotEmpty, IsNumber,
   IsString,
   Min,
 } from 'class-validator';
 
+// Defines what data is allowed into Bill API
 export class CreateBillDto {
   @IsString()
   @IsNotEmpty()

@@ -7,13 +7,19 @@ import {Bill, BillSchema} from "../bills/schemas/bill.schema";
 
 @Module({
   imports: [
+    // Registers Allocation and Bill schemas with MongoDB for use in this module
     MongooseModule.forFeature([
       { name: Allocation.name, schema: AllocationSchema },
       { name: Bill.name, schema: BillSchema }
     ]),
   ],
+  // Registers the controller that handles incoming requests
   controllers: [AllocationController],
+
+  // Registers the service that contains the business logic
   providers: [AllocationService],
+
+  // Exports the service so other modules can use it
   exports: [AllocationService],
 })
 export class AllocationsModule {}

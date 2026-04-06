@@ -90,8 +90,13 @@
         <button class="close-btn" (click)="closePaymentModal()">✕</button>
       </div>
       <div class="modal-body">
-        <label>Bill Type</label>
-        <input type="text" [value]="getBillTypeName(paymentBillTypeId)" disabled />
+        <label>Select Bill</label>
+        <select [(ngModel)]="selectedAllocationId" (ngModelChange)="onAllocationChange($event)">
+          <option *ngFor="let a of unpaidAllocations" [value]="a._id">
+            {{ getBillTypeName(getBillForAllocation(a)?.billTypeId ?? '') }} — €{{ (a.amountOwed - a.amountPaid).toFixed(2) }} outstanding
+          </option>
+        </select>
+
         <label>Amount (€)</label>
         <input type="number" [(ngModel)]="paymentAmount" min="0.01" placeholder="Enter amount" />
         <p class="error" *ngIf="paymentError">{{ paymentError }}</p>

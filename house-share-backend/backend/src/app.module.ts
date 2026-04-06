@@ -10,7 +10,10 @@ import { AllocationsModule } from './allocation/allocation.module';
 
 @Module({
   imports: [
+    // Loads .env  and makes them available
     ConfigModule.forRoot({ isGlobal: true }),
+
+    // Connects to MongoDB using the MONGO_URI
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -18,6 +21,8 @@ import { AllocationsModule } from './allocation/allocation.module';
         uri: config.get<string>('MONGO_URI'),
       }),
     }),
+
+    // Registers all feature modules with the app
     BillsModule,
     PaymentsModule,
     HouseholdsModule,

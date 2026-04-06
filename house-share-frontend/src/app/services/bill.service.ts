@@ -11,20 +11,26 @@ export class BillService {
 
   constructor(private http: HttpClient) {}
 
+  // Creates bill
   createBill(bill: Bill): Observable<Bill> {
     return this.http.post<Bill>(this.apiUrl, bill);
   }
 
+  // Returns all bills by household
   getBillsByHousehold(householdId: string): Observable<Bill[]> {
     return this.http.get<Bill[]>(`${this.apiUrl}/household/${householdId}`);
   }
 
+  // Partially updates bill
+  updateBill(id: string, data: Partial<Bill>): Observable<Bill> {
+    return this.http.patch<Bill>(`${this.apiUrl}/${id}`, data);
+  }
+
+  // Deletes bill
   deleteBill(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  updateBill(id: string, data: Partial<Bill>): Observable<Bill> {
-    return this.http.patch<Bill>(`${this.apiUrl}/${id}`, data);
-  }
+
 
 }
