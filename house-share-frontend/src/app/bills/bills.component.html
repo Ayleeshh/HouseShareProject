@@ -1,0 +1,185 @@
+<div class="page">
+
+  <!-- Create Bill Modal -->
+  <div class="modal-backdrop" *ngIf="showCreateModal" (click)="closeCreateModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Create Bill</h3>
+        <button class="close-btn" (click)="closeCreateModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <label>Bill Type</label>
+        <select [(ngModel)]="newBill.billTypeId">
+          <option value="" disabled>Select a type</option>
+          <option *ngFor="let t of billTypes" [value]="t._id">{{ t.name }}</option>
+        </select>
+        <label>Description</label>
+        <input type="text" [(ngModel)]="newBill.description" placeholder="Description" />
+        <label>Total Amount (€)</label>
+        <input type="number" [(ngModel)]="newBill.totalAmount" min="0" />
+        <label>Start Date</label>
+        <input type="date" [(ngModel)]="newBill.startDate" />
+        <label>End Date</label>
+        <input type="date" [(ngModel)]="newBill.endDate" />
+      </div>
+      <button class="submit-btn" (click)="createBill()">Create Bill</button>
+    </div>
+  </div>
+
+  <!-- Edit Bill Modal -->
+  <div class="modal-backdrop" *ngIf="showEditModal && editBill" (click)="closeEditModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Edit Bill</h3>
+        <button class="close-btn" (click)="closeEditModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <label>Bill Type</label>
+        <select [(ngModel)]="editBill!.billTypeId">
+          <option *ngFor="let t of billTypes" [value]="t._id">{{ t.name }}</option>
+        </select>
+        <label>Description</label>
+        <input type="text" [(ngModel)]="editBill!.description" />
+        <label>Total Amount (€)</label>
+        <input type="number" [(ngModel)]="editBill!.totalAmount" min="0" />
+        <label>End Date</label>
+        <input type="date" [(ngModel)]="editBill!.endDate" />
+      </div>
+      <button class="submit-btn" (click)="updateBill()">Save Changes</button>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal-backdrop" *ngIf="showDetail && selectedBill" (click)="closeDetail()">
+    <div class="modal wide" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ getHouseholdName(selectedBill.householdId) }} - {{ getBillTypeName(selectedBill.billTypeId) }} Bill</h3>
+        <button class="close-btn" (click)="closeDetail()">✕</button>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card">
+          <span class="stat-label">Total Amount</span>
+          <span class="stat-value">€{{ selectedBill.totalAmount.toFixed(2) }}</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Amount Collected</span>
+          <span class="stat-value">€{{ getAmountCollected(selectedBill._id!).toFixed(2) }}</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Amount Outstanding</span>
+          <span class="stat-value">€{{ getAmountOutstanding(selectedBill._id!).toFixed(2) }}</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">End Date</span>
+          <span class="stat-value small">{{ selectedBill.endDate | date:'dd/MM/yyyy' }}</span>
+        </div>
+      </div>
+      <table class="data-table">
+        <thead>
+        <tr>
+          <th>Member</th>
+          <th>Amount Owed</th>
+          <th>Amount Paid</th>
+          <th>Outstanding</th>
+          <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let a of selectedBillAllocations">
+          <td>{{ getMemberName(a.memberId) }}</td>
+          <td>€{{ a.amountOwed.toFixed(2) }}</td>
+          <td>€{{ a.amountPaid.toFixed(2) }}</td>
+          <td>€{{ (a.amountOwed - a.amountPaid).toFixed(2) }}</td>
+          <td><span class="status-badge" [ngClass]="a.status">{{ a.status }}</span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Payment Modal -->
+  <div class="modal-backdrop" *ngIf="showPaymentModal" (click)="closePaymentModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Make Payment</h3>
+        <button class="close-btn" (click)="closePaymentModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <label>Bill Type</label>
+        <input type="text" [value]="getBillTypeName(paymentBillTypeId)" disabled />
+        <label>Amount (€)</label>
+        <input type="number" [(ngModel)]="paymentAmount" min="0.01" placeholder="Enter amount" />
+        <p class="error" *ngIf="paymentError">{{ paymentError }}</p>
+      </div>
+      <button class="submit-btn" (click)="submitPayment()">Make Payment</button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <h1 class="page-title">{{ getHouseholdName(currentUser?.householdId ?? '') }} Bills</h1>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>Recent Bills</h2>
+      <button class="create-btn" *ngIf="currentUser?.isAdmin" (click)="openCreateModal()">+ Create Bill</button>
+    </div>
+    <table class="data-table">
+      <thead>
+      <tr>
+        <th>Bill Type</th>
+        <th>Total Amount</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Status</th>
+        <th *ngIf="currentUser?.isAdmin">Manage</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let b of bills" (click)="viewDetail(b)" class="clickable-row">
+        <td>{{ getBillTypeName(b.billTypeId) }}</td>
+        <td>€{{ b.totalAmount.toFixed(2) }}</td>
+        <td>{{ b.startDate | date:'dd/MM/yyyy' }}</td>
+        <td>{{ b.endDate | date:'dd/MM/yyyy' }}</td>
+        <td><span class="status-badge" [ngClass]="getBillStatus(b._id!)">{{ getBillStatus(b._id!) }}</span></td>
+        <td *ngIf="currentUser?.isAdmin" (click)="$event.stopPropagation()">
+          <button class="icon-btn" (click)="openEditModal(b)" title="Edit">✏️</button>
+          <button class="icon-btn" (click)="deleteBill(b._id!)" title="Delete">🗑️</button>
+        </td>
+      </tr>
+      <tr *ngIf="bills.length === 0">
+        <td colspan="6" class="empty">No bills found</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- My Unpaid Bills -->
+  <div class="card" *ngIf="myUnpaidBills.length > 0">
+    <div class="card-header">
+      <h2>Your Unpaid Bills</h2>
+    </div>
+    <table class="data-table">
+      <thead>
+      <tr>
+        <th>Bill Type</th>
+        <th>Total Amount</th>
+        <th>Amount Collected</th>
+        <th>Amount Outstanding</th>
+        <th>End Date</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let b of myUnpaidBills">
+        <td>{{ getBillTypeName(b.billTypeId) }}</td>
+        <td>€{{ b.totalAmount.toFixed(2) }}</td>
+        <td>€{{ getAmountCollected(b._id!).toFixed(2) }}</td>
+        <td>€{{ (getMyAllocation(b._id!)?.amountOwed ?? 0) - (getMyAllocation(b._id!)?.amountPaid ?? 0) | number:'1.2-2' }}</td>
+        <td>{{ b.endDate | date:'dd/MM/yyyy' }}</td>
+        <td><button class="pay-btn" (click)="openPaymentModal(b)">Make Payment</button></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

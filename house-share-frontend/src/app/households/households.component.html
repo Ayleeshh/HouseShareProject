@@ -1,0 +1,42 @@
+<!-- Tabs -->
+<div class="tabs">
+  <button (click)="setTab('view')"   [class.active]="activeTab === 'view'">View</button>
+  <button (click)="setTab('create')" [class.active]="activeTab === 'create'">Create</button>
+  <button (click)="setTab('edit')"   [class.active]="activeTab === 'edit'">Edit</button>
+</div>
+
+<!-- View -->
+<div *ngIf="activeTab === 'view'">
+  <h3>All Households</h3>
+  <ul>
+    <li *ngFor="let h of households">
+      <strong>{{ h.name }}</strong>
+      <button (click)="selectHousehold(h)">Edit</button>
+      <button class="delete-btn" (click)="deleteHousehold(h._id!)">Delete</button>
+    </li>
+  </ul>
+</div>
+
+<!-- Create -->
+<div *ngIf="activeTab === 'create'">
+  <h3>Create a Household</h3>
+  <form (ngSubmit)="createHousehold()">
+    <input type="text" [(ngModel)]="newHouseholdName" name="name" placeholder="Household name" required />
+    <br/>
+    <button type="submit">Create</button>
+  </form>
+</div>
+
+<!-- Edit -->
+<div *ngIf="activeTab === 'edit'">
+  <h3>Edit Household</h3>
+  <div *ngIf="!selectedHousehold">
+    <p>Select a household from the View tab to edit it.</p>
+  </div>
+  <form *ngIf="selectedHousehold" (ngSubmit)="updateHousehold()">
+    <input type="text" [(ngModel)]="selectedHousehold.name" name="editName" required />
+    <br/>
+    <button type="submit">Save Changes</button>
+    <button type="button" (click)="setTab('view')">Cancel</button>
+  </form>
+</div>

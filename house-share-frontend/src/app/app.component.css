@@ -1,0 +1,233 @@
+/* ── Layout Shell ── */
+.app-wrapper {
+  display: flex;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  background: #f0f0f0;
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  width: 250px;
+  min-width: 200px;
+  background: #e8e8e8;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  border-right: 1px solid #d0d0d0;
+}
+
+.brand {
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 20px 16px 16px;
+  border-bottom: 2px solid #999;
+  margin-bottom: 8px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 0;
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: 10px 16px;
+  text-decoration: none;
+  color: #222;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  margin: 0 8px;
+}
+
+.sidebar-nav a.active {
+  background: #cc44cc;   /* purple from screenshot */
+  color: white;
+  font-weight: bold;
+}
+
+.sidebar-nav a:hover:not(.active) {
+  background: #d8d8d8;
+}
+
+.nav-group-label {
+  font-size: 0.85rem;
+  color: #555;
+  padding: 12px 16px 4px;
+  font-weight: 600;
+  text-transform: none;
+}
+
+.nav-sub {
+  padding-left: 24px !important;
+}
+
+/* ── Main Area ── */
+.main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Top Header ── */
+.top-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: 56px;
+  background: white;
+  border-bottom: 1px solid #ddd;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.user-menu {
+  cursor: pointer;
+  font-weight: normal;
+}
+
+/* ── Page Content ── */
+.page-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+/* ── User Dropdown ── */
+.user-dropdown {
+  position: relative;
+}
+
+.dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #222;
+  transition: background 0.15s;
+}
+
+.dropdown-trigger:hover {
+  background: #f5f5f5;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #cc44cc;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.avatar.small {
+  width: 26px;
+  height: 26px;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.chevron {
+  font-size: 0.8rem;
+  color: #666;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+
+.chevron.open {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  min-width: 200px;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.dropdown-header {
+  font-size: 0.75rem;
+  color: #888;
+  padding: 10px 14px 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.dropdown-item:hover {
+  background: #f5f5f5;
+}
+
+.dropdown-item.active {
+  background: #faf0fa;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.user-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.user-role {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.check {
+  color: #cc44cc;
+  font-weight: bold;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: #f0f0f0;
+  margin: 4px 0;
+}
+
+.dropdown-item.new-household:hover {
+  background: #f0f0ff;
+}
+
+.avatar.plus {
+  background: #3333cc;
+  font-size: 1.1rem;
+  font-weight: bold;
+}

@@ -3,48 +3,63 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Payment, PaymentDocument } from './schemas/payment.schema';
 import { AllocationService } from '../allocation/allocation.service';
-import { AllocationStatus } from '../allocation/schemas/allocation.schema';
-import {CreatePaymentDto} from "./dto/create-payment.dto";
-
+import { CreatePaymentDto } from './dto/create-payment.dto';
 @Injectable()
 export class PaymentsService {
-    constructor(
-        @InjectModel(Payment.name) private paymentModel: Model<PaymentDocument>,
-        private allocationService: AllocationService,
-    ) {}
+  constructor(
 
-    async addPayment(dto: CreatePaymentDto) {
-        const allocation = await this.allocationService.findById(dto.allocationId);
-        if (!allocation) throw new BadRequestException('Allocation not found');
+      // Injects the Payment MongoDB model so we can query the payments collection
+      @InjectModel(Payment.name)
+      private paymentModel: Model<PaymentDocument>,
 
-        // Rule 3: Cannot pay more than owed
-        if (dto.amount > allocation.amountOutstanding) {
-            throw new BadRequestException(
-                `Payment exceeds outstanding amount: ${allocation.amountOutstanding}`
-            );
-        }
+      // Injects AllocationService to update the member's allocation after payment
+      private allocationService: AllocationService,
+  ) {}
 
-        // Save payment record
-        const payment = new this.paymentModel(dto);
-        await payment.save();
+  async create(dto: CreatePaymentDto) {
+    const allocation = await this.allocationService.findById(dto.allocationId);
 
-        // Update allocation
-        const newPaid = +(allocation.amountPaid + dto.amount).toFixed(2);
-        const newOutstanding = +(allocation.amountOwed - newPaid).toFixed(2);
-
-        let newStatus: AllocationStatus;
-        if (newPaid === 0) newStatus = AllocationStatus.UNPAID;
-        else if (newPaid >= allocation.amountOwed) newStatus = AllocationStatus.PAID;
-        else newStatus = AllocationStatus.PART_PAID;
-
-        await this.allocationService.updatePayment(allocation._id, {
-            amountPaid: newPaid,
-            amountOutstanding: newOutstanding,
-            status: newStatus,
-        });
-
-        await this.allocationService.checkAndCloseBill(allocation.billId);
-
-        return payment;
+    if (!allocation) {
+      throw new BadRequestException('Allocation not found');
     }
+
+    // Work in whole cents to avoid floating point issues entirely
+    const owedCents = Math.round(allocation.amountOwed * 100);
+    const paidCents = Math.round(allocation.amountPaid * 100);
+    const paymentCents = Math.round(dto.amount * 100);
+    const outstandingCents = owedCents - paidCents;
+
+    if (paymentCents > outstandingCents) {
+      throw new BadRequestException('Overpayment not allowed');
+    }
+
+    const payment = await this.paymentModel.create(dto);
+
+    const newPaidCents = paidCents + paymentCents;
+
+    await this.allocationService.updatePayment(allocation._id.toString(), {
+      amountPaid: newPaidCents / 100,
+      status: newPaidCents >= owedCents ? 'paid' : 'part-paid',
+    });
+
+    await this.allocationService.checkAndCloseBill(allocation.billId);
+
+    return payment;
+  }
+
+  // Returns all payments made against a specific bill
+  async findByBill(billId: string) {
+    return this.paymentModel.find({ billId });
+  }
+
+  // Returns all payments made against a specific allocation
+  async findByAllocation(allocationId: string) {
+    return this.paymentModel.find({ allocationId });
+  }
+
+  // Returns all payments made by a specific member
+  async findByMember(memberId: string) {
+    return this.paymentModel.find({ memberId });
+  }
+
 }

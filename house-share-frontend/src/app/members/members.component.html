@@ -1,0 +1,79 @@
+<div class="page">
+
+  <!-- Create Modal -->
+  <div class="modal-backdrop" *ngIf="showCreateModal" (click)="closeCreateModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Create Member</h3>
+        <button class="close-btn" (click)="closeCreateModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <label>Name</label>
+        <input type="text" [(ngModel)]="newMember.name" placeholder="Full name" />
+        <label>Email</label>
+        <input type="email" [(ngModel)]="newMember.email" placeholder="Email address" />
+        <div class="checkbox-row">
+          <label><input type="checkbox" [(ngModel)]="newMember.isAdmin" /> Admin</label>
+          <label><input type="checkbox" [(ngModel)]="newMember.isActive" /> Active</label>
+        </div>
+      </div>
+      <button class="submit-btn" (click)="createMember()">Create Member</button>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal-backdrop" *ngIf="showEditModal && selectedMember" (click)="closeEditModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Edit Member</h3>
+        <button class="close-btn" (click)="closeEditModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <label>Name</label>
+        <input type="text" [(ngModel)]="selectedMember!.name" />
+        <label>Email</label>
+        <input type="email" [(ngModel)]="selectedMember!.email" />
+        <div class="checkbox-row">
+          <label><input type="checkbox" [(ngModel)]="selectedMember!.isAdmin" /> Admin</label>
+          <label><input type="checkbox" [(ngModel)]="selectedMember!.isActive" /> Active</label>
+        </div>
+      </div>
+      <button class="submit-btn" (click)="updateMember()">Save Changes</button>
+    </div>
+  </div>
+
+  <h1 class="page-title">{{ getHouseholdName(currentUser?.householdId ?? '') }} Members</h1>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>Members</h2>
+      <button class="create-btn" *ngIf="currentUser?.isAdmin" (click)="openCreateModal()">+ Create Member</button>
+    </div>
+    <table class="data-table">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>Total Paid</th>
+        <th>Total Outstanding</th>
+        <th>Status</th>
+        <th *ngIf="currentUser?.isAdmin">Manage</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let m of members">
+        <td>{{ m.name }}</td>
+        <td>€{{ getTotalPaid(m._id!).toFixed(2) }}</td>
+        <td>€{{ getTotalOutstanding(m._id!).toFixed(2) }}</td>
+        <td><span class="status-badge" [ngClass]="getMemberStatus(m._id!)">{{ getMemberStatus(m._id!) }}</span></td>
+        <td *ngIf="currentUser?.isAdmin">
+          <button class="icon-btn" (click)="openEditModal(m)" title="Edit">✏️</button>
+          <button class="icon-btn" (click)="deleteMember(m._id!)" title="Delete">🗑️</button>
+        </td>
+      </tr>
+      <tr *ngIf="members.length === 0">
+        <td colspan="5" class="empty">No members found</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

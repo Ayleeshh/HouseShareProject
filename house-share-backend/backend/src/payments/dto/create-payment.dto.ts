@@ -1,19 +1,25 @@
-import {IsDateString, IsInt, IsNotEmpty, IsString, Min} from 'class-validator';
+import {
+  IsDateString,
+  IsNotEmpty, IsNumber,
+  IsString,
+  Min,
+} from 'class-validator';
 
+// Defines what data is allowed into Payment API
 export class CreatePaymentDto {
+  @IsString()
+  @IsNotEmpty()
+  memberId: string;
 
-    @IsString()
-    @IsNotEmpty()
-    billId: string;
+  @IsString()
+  @IsNotEmpty()
+  allocationId: string;
 
-    @IsString()
-    @IsNotEmpty()
-    memberId: string;
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  amount: number;
 
-    @IsInt()
-    @Min(0)
-    totalCents: number;
+  @IsDateString()
+  paidAt: string;
 
-    @IsDateString()
-    date: string;
 }

@@ -1,0 +1,68 @@
+.setup-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+}
+
+.setup-card {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.setup-card h2 {
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 28px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.field label {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.field input {
+  padding: 14px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.field input:focus {
+  border-color: #3333cc;
+}
+
+.create-btn {
+  width: 100%;
+  background: #3333cc;
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.create-btn:hover { background: #2222aa; }
+.create-btn:disabled { background: #9999dd; cursor: not-allowed; }
+
+.error {
+  color: #c62828;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}

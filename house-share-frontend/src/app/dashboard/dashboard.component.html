@@ -1,0 +1,72 @@
+<div class="dashboard" *ngIf="!loading; else loadingTpl">
+
+  <h1 class="household-title">Household Name - {{ household?.name }}</h1>
+
+  <!-- Stat Cards -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <span class="stat-label">Total Outstanding</span>
+      <span class="stat-value">€{{ totalOutstanding.toFixed(2) }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Total Collected</span>
+      <span class="stat-value">€{{ totalCollected.toFixed(2) }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">My Outstanding</span>
+      <span class="stat-value">€{{ myOutstanding.toFixed(2) }}</span>
+    </div>
+  </div>
+
+  <!-- Members -->
+  <div class="card">
+    <div class="card-header">
+      <h2>Members</h2>
+      <a routerLink="/members" class="view-all">View all</a>
+    </div>
+    <div class="members-row">
+      <div class="member-item" *ngFor="let member of members">
+        <div class="avatar-circle">{{ getInitial(member.name) }}</div>
+        <span class="member-name">{{ member.name }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Bills -->
+  <div class="card">
+    <div class="card-header">
+      <h2>Recent Bills</h2>
+      <a routerLink="/bills" class="view-all">View all</a>
+    </div>
+    <table class="bills-table">
+      <thead>
+      <tr>
+        <th>Description</th>
+        <th>Amount</th>
+        <th>End Date</th>
+        <th>Status</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let bill of recentBills">
+        <td>{{ bill.description }}</td>
+        <td>€{{ bill.totalAmount.toFixed(2) }}</td>
+        <td>{{ bill.endDate ? (bill.endDate | date:'dd/MM/yyyy') : '—' }}</td>
+        <td>
+            <span class="status-badge" [ngClass]="getBillStatus(bill)">
+              {{ getBillStatus(bill) }}
+            </span>
+        </td>
+      </tr>
+      <tr *ngIf="recentBills.length === 0">
+        <td colspan="4" class="empty">No bills found</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<ng-template #loadingTpl>
+  <div class="loading">Loading dashboard...</div>
+</ng-template>

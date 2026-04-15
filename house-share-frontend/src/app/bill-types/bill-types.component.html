@@ -1,0 +1,61 @@
+<div class="page">
+
+  <!-- Create Modal -->
+  <div class="modal-backdrop" *ngIf="showCreateModal" (click)="closeCreateModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Create Bill Type</h3>
+        <button class="close-btn" (click)="closeCreateModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <label>Name</label>
+        <input type="text" [(ngModel)]="newBillType.name" placeholder="e.g. Electricity" />
+      </div>
+      <button class="submit-btn" (click)="createBillType()">Create Bill Type</button>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal-backdrop" *ngIf="showEditModal && selectedBillType" (click)="closeEditModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Edit Bill Type</h3>
+        <button class="close-btn" (click)="closeEditModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <label>Name</label>
+        <input type="text" [(ngModel)]="selectedBillType!.name" />
+      </div>
+      <button class="submit-btn" (click)="updateBillType()">Save Changes</button>
+    </div>
+  </div>
+
+  <h1 class="page-title">{{ getHouseholdName(currentUser?.householdId ?? '') }} Bill Types</h1>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>Bill Types</h2>
+      <button class="create-btn" (click)="openCreateModal()">+ Create Bill Type</button>
+    </div>
+    <table class="data-table">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th class="manage-col">Manage</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let b of billTypes">
+        <td>{{ b.name }}</td>
+        <td class="manage-col">
+          <button class="icon-btn" (click)="openEditModal(b)" title="Edit">✏️</button>
+          <button class="icon-btn" (click)="deleteBillType(b._id!)" title="Delete">🗑️</button>
+        </td>
+      </tr>
+      <tr *ngIf="billTypes.length === 0">
+        <td colspan="2" class="empty">No bill types found</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

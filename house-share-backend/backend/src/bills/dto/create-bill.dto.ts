@@ -1,27 +1,32 @@
 import {
-    IsDateString,
-    IsInt,
-    IsNotEmpty,
-    IsString,
-    Min,
+  IsDateString,
+  IsNotEmpty, IsNumber,
+  IsString,
+  Min,
 } from 'class-validator';
 
+// Defines what data is allowed into Bill API
 export class CreateBillDto {
-    @IsString()
-    @IsNotEmpty()
-    householdId: string;
+  @IsString()
+  @IsNotEmpty()
+  householdId: string;
 
-    @IsString()
-    @IsNotEmpty()
-    billTypeId: string;
+  @IsString()
+  @IsNotEmpty()
+  billTypeId: string;
 
-    @IsInt()
-    @Min(0)
-    totalCents: number;
+  @IsString()
+  @IsNotEmpty()
+  description: string;
 
-    @IsDateString()
-    periodStart: string;
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  totalAmount: number;
 
-    @IsDateString()
-    periodEnd: string;
+  @IsDateString()
+  startDate: string;
+
+  @IsDateString()
+  endDate: string;
+
 }

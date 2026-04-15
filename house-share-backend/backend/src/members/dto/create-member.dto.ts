@@ -1,24 +1,29 @@
 import {
-    IsBoolean,
-    IsDateString,
-    IsInt,
-    IsNotEmpty,
-    IsString,
-    Min,
+  IsBoolean,
+  IsNotEmpty,
+  IsString,
 } from 'class-validator';
 
+// Defines what data is allowed into Member API
 export class CreateMemberDto {
-    @IsString()
-    @IsNotEmpty()
-    householdId: string;
+  @IsString()
+  @IsNotEmpty()
+  householdId: string;
 
-    @IsString()
-    @IsNotEmpty()
-    name: string;
+  @IsString()
+  @IsNotEmpty()
+  name: string;
 
-    @IsBoolean()
-    @IsNotEmpty()
-    isAdmin: boolean;
+  @IsString()
+  @IsNotEmpty()
+  email: string;
 
+  @IsBoolean()
+  @IsNotEmpty()
+  isAdmin: boolean;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  isActive: boolean;
 
 }

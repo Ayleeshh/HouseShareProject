@@ -1,0 +1,26 @@
+<div class="setup-wrapper">
+  <div class="setup-card">
+    <h2>Admin & Household</h2>
+
+    <div class="field">
+      <label>Admin Name</label>
+      <input type="text" [(ngModel)]="name" placeholder="" />
+    </div>
+
+    <div class="field">
+      <label>Admin Email</label>
+      <input type="email" [(ngModel)]="email" placeholder="" />
+    </div>
+
+    <div class="field">
+      <label>Household Name</label>
+      <input type="text" [(ngModel)]="householdName" placeholder="" />
+    </div>
+
+    <p class="error" *ngIf="error">{{ error }}</p>
+
+    <button class="create-btn" (click)="create()" [disabled]="loading">
+      {{ loading ? 'Creating...' : 'Create' }}
+    </button>
+  </div>
+</div>

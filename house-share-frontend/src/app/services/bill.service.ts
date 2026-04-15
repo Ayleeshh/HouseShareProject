@@ -4,22 +4,33 @@ import { Observable } from 'rxjs';
 import { Bill } from '../models/bill';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BillService {
-
   private apiUrl = 'http://localhost:3000/bills';
-  private householdId = 'h1';
 
   constructor(private http: HttpClient) {}
 
-  getBills(): Observable<Bill[]> {
-    return this.http.get<Bill[]>(this.apiUrl, {
-      params: { householdId: this.householdId }
-    });
-  }
-
-  addBill(bill: Bill): Observable<Bill> {
+  // Creates bill
+  createBill(bill: Bill): Observable<Bill> {
     return this.http.post<Bill>(this.apiUrl, bill);
   }
+
+  // Returns all bills by household
+  getBillsByHousehold(householdId: string): Observable<Bill[]> {
+    return this.http.get<Bill[]>(`${this.apiUrl}/household/${householdId}`);
+  }
+
+  // Partially updates bill
+  updateBill(id: string, data: Partial<Bill>): Observable<Bill> {
+    return this.http.patch<Bill>(`${this.apiUrl}/${id}`, data);
+  }
+
+  // Deletes bill
+  deleteBill(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+
+
 }

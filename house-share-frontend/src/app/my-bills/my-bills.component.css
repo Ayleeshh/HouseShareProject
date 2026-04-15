@@ -1,0 +1,110 @@
+.my-bills-page { display: flex; flex-direction: column; gap: 24px; }
+
+.page-title {
+  font-size: 1.4rem;
+  font-style: italic;
+  font-weight: bold;
+  text-align: center;
+  margin: 0;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  overflow: hidden;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+  gap: 8px;
+}
+
+.stat-card:last-child { border-right: none; }
+.stat-label { font-size: 0.85rem; color: #555; }
+.stat-value { font-size: 1.8rem; font-weight: bold; }
+
+.pay-banner {
+  width: 100%;
+  background: #3333cc;
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+}
+
+.pay-banner:hover { background: #2222aa; }
+
+.card {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  padding: 20px 24px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.card-header h2 { font-size: 1.1rem; font-weight: 600; margin: 0; }
+
+.view-all-btn {
+  font-size: 0.85rem;
+  color: #555;
+  background: none;
+  border: 1px solid #ccc;
+  padding: 4px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.bills-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.bills-table th { text-align: left; padding: 8px 12px; font-weight: 600; color: #444; border-bottom: 1px solid #eee; }
+.bills-table td { padding: 12px; border-bottom: 1px solid #f5f5f5; color: #333; }
+.bills-table tr:last-child td { border-bottom: none; }
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  width: 360px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+}
+
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.modal-header h3 { margin: 0; font-size: 1.1rem; }
+
+.modal-body { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.modal-body label { font-size: 0.85rem; font-weight: 600; color: #444; }
+.modal-body input, select { padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.95rem; width: 100%; box-sizing: border-box; }
+.modal-body input:disabled { background: #f5f5f5; color: #666; }
+
+.submit-pay-btn { width: 100%; background: #3333cc; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+.submit-pay-btn:hover { background: #2222aa; }
+
+.close-btn { background: none; border: none; font-size: 1.1rem; cursor: pointer; color: #666; }
+.error { color: #c62828; font-size: 0.85rem; margin: 0; }
+.empty { text-align: center; color: #999; padding: 24px; }

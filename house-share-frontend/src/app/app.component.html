@@ -1,3 +1,64 @@
-<h1>House Share App</h1>
+<div class="app-wrapper">
+  <aside class="sidebar">
+    <div class="brand">House Share App</div>
+    <nav class="sidebar-nav">
 
-<app-bills></app-bills>
+      <a routerLink="/dashboard" routerLinkActive="active">📊 Household Dashboard</a>
+      <a routerLink="/bills" routerLinkActive="active">🧾 Household Bills</a>
+      <a routerLink="/my-bills" routerLinkActive="active">💳 My Bills</a>
+      <a routerLink="/members" routerLinkActive="active">👤 Household Members</a>
+
+
+      <ng-container *ngIf="currentUser?.isAdmin">
+        <a routerLink="/bill-types" routerLinkActive="active" >🔌 Bill Types</a>
+      </ng-container>
+
+    </nav>
+  </aside>
+
+  <div class="main-area">
+    <header class="top-header">
+      <span class="page-title">Household Dashboard</span>
+
+      <!-- Custom dropdown -->
+      <div class="user-dropdown" *ngIf="currentUser">
+        <button class="dropdown-trigger" (click)="toggleDropdown()">
+          <div class="avatar">{{ currentUser.name.charAt(0) }}</div>
+          <span class="username">{{ currentUser.name }}</span>
+          <span class="chevron" [class.open]="dropdownOpen">▾</span>
+        </button>
+
+        <div class="dropdown-menu" *ngIf="dropdownOpen">
+          <div class="dropdown-header">Switch User</div>
+          <button
+            *ngFor="let user of memberService.availableUsers"
+            class="dropdown-item"
+            [class.active]="user._id === currentUser._id"
+            (click)="selectUser(user._id!)">
+            <div class="avatar small">{{ user.name.charAt(0) }}</div>
+            <div class="user-info">
+              <span class="user-name">{{ user.name }}</span>
+              <span class="user-role">{{ user.isAdmin ? 'Admin' : 'Member' }}</span>
+            </div>
+            <span class="check" *ngIf="user._id === currentUser._id">✓</span>
+          </button>
+
+          <!-- ← Add this divider + button -->
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item new-household" (click)="goToSetup()">
+            <div class="avatar small plus">+</div>
+            <div class="user-info">
+              <span class="user-name">New Household</span>
+              <span class="user-role">Create a new household</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+    </header>
+
+    <div class="page-content" (click)="closeDropdown()">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

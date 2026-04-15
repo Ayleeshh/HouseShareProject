@@ -1,36 +1,40 @@
 import {
-    Body,
-    Controller,
-    Get,
-    Param,
-    Patch,
-    Post,
-    Query,
+  Body,
+  Controller, Delete,
+  Get,
+  Param,
+  Post,
 } from '@nestjs/common';
 import { BillsService } from './bills.service';
 import { CreateBillDto } from './dto/create-bill.dto';
 
+// All routes start with 'bills'
 @Controller('bills')
 export class BillsController {
-    constructor(private readonly billsService: BillsService) {}
+  // Injects service so the methods can be called
+  constructor(private billsService: BillsService) {}
 
-    @Post()
-    create(@Body() dto: CreateBillDto) {
-        return this.billsService.create(dto);
-    }
+  // Creates a bill using data from html
+  @Post()
+  create(@Body() dto: CreateBillDto) {
+    return this.billsService.create(dto);
+  }
 
-    @Get()
-    findAll(@Query('householdId') householdId: string) {
-        return this.billsService.findAllByHousehold(householdId);
-    }
+  // Returns a bill using household id
+  @Get('household/:householdId')
+  findByHousehold(@Param('householdId') id: string) {
+    return this.billsService.findByHousehold(id);
+  }
 
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.billsService.findOne(id);
-    }
+  // Returns bill by bill id
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.billsService.findOne(id);
+  }
 
-    @Patch(':id/paid')
-    markPaid(@Param('id') id: string) {
-        return this.billsService.markPaid(id);
-    }
+  // Deletes a bill
+  @Delete(':id')
+  delete(@Param('id') id: string) {
+    return this.billsService.delete(id);
+  }
 }

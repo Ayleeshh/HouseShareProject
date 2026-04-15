@@ -1,22 +1,8 @@
-import {
-    IsDateString,
-    IsInt,
-    IsNotEmpty,
-    IsString,
-    Min,
-} from 'class-validator';
+import { IsString, IsNotEmpty } from 'class-validator';
 
+// Defines what data is allowed into Household API
 export class CreateHouseholdDto {
-    @IsString()
-    @IsNotEmpty()
-    householdId: string;
-
-    @IsString()
-    @IsNotEmpty()
-    householdName: string;
-
-    // @IsString()
-    // @IsNotEmpty()
-    // members: string;
-
+  @IsString()
+  @IsNotEmpty()
+  name: string;
 }

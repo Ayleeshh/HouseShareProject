@@ -1,0 +1,107 @@
+<div class="my-bills-page">
+  <h1 class="page-title">{{ currentUser?.name }}'s Bills</h1>
+
+  <!-- Stat Cards -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <span class="stat-label">Total Amount</span>
+      <span class="stat-value">€{{ totalOwed.toFixed(2) }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Your Amount Collected</span>
+      <span class="stat-value">€{{ totalPaid.toFixed(2) }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Your Amount Outstanding</span>
+      <span class="stat-value">€{{ totalOutstanding.toFixed(2) }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Bills to pay</span>
+      <span class="stat-value">{{ billsToPay }}</span>
+    </div>
+  </div>
+
+  <!-- Make Payment Banner -->
+  <button class="pay-banner" *ngIf="unpaidAllocations.length > 0" (click)="openPaymentModal(unpaidAllocations[0])">
+    Make Payment
+  </button>
+
+  <!-- Unpaid Bills -->
+  <div class="card">
+    <div class="card-header">
+      <h2>Your Unpaid Bills</h2>
+    </div>
+    <table class="bills-table">
+      <thead>
+      <tr>
+        <th>Bill Type</th>
+        <th>Total Amount</th>
+        <th>Amount Collected</th>
+        <th>Amount Outstanding</th>
+        <th>End Date</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let a of unpaidAllocations">
+        <td>{{ getBillTypeName(getBillForAllocation(a)?.billTypeId ?? '') }}</td>
+        <td>€{{ a.amountOwed.toFixed(2) }}</td>
+        <td>€{{ a.amountPaid.toFixed(2) }}</td>
+        <td>€{{ (a.amountOwed - a.amountPaid).toFixed(2) }}</td>
+        <td>{{ getBillForAllocation(a)?.endDate | date:'dd/MM/yyyy' }}</td>
+      </tr>
+      <tr *ngIf="unpaidAllocations.length === 0">
+        <td colspan="5" class="empty">All bills paid! 🎉</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Paid Bills -->
+  <div class="card">
+    <div class="card-header">
+      <h2>Your Payment History</h2>
+    </div>
+    <table class="bills-table">
+      <thead>
+      <tr>
+        <th>Bill Type</th>
+        <th>Amount Paid</th>
+        <th>Date Paid</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let p of sortedPayments">
+        <td>{{ getBillTypeNameForPayment(p) }}</td>
+        <td>€{{ p.amount.toFixed(2) }}</td>
+        <td>{{ p.paidAt | date:'dd/MM/yyyy HH:mm' }}</td>
+      </tr>
+      <tr *ngIf="payments.length === 0">
+        <td colspan="3" class="empty">No payments made yet</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Payment Modal -->
+  <div class="modal-backdrop" *ngIf="showPaymentModal" (click)="closePaymentModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Make Payment</h3>
+        <button class="close-btn" (click)="closePaymentModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <label>Select Bill</label>
+        <select [(ngModel)]="selectedAllocationId" (ngModelChange)="onAllocationChange($event)">
+          <option *ngFor="let a of unpaidAllocations" [value]="a._id">
+            {{ getBillTypeName(getBillForAllocation(a)?.billTypeId ?? '') }} — €{{ (a.amountOwed - a.amountPaid).toFixed(2) }} outstanding
+          </option>
+        </select>
+
+        <label>Amount (€)</label>
+        <input type="number" [(ngModel)]="paymentAmount" min="0.01" placeholder="Enter amount" />
+        <p class="error" *ngIf="paymentError">{{ paymentError }}</p>
+      </div>
+      <button class="submit-pay-btn" (click)="submitPayment()">Make Payment</button>
+    </div>
+  </div>
+</div>
